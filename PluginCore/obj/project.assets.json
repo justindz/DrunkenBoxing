@@ -1,0 +1,175 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v2.0": {
+      "Microsoft.NETFramework.ReferenceAssemblies/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETFramework.ReferenceAssemblies.net20": "1.0.0"
+        }
+      },
+      "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v2.0/x86": {
+      "Microsoft.NETFramework.ReferenceAssemblies/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETFramework.ReferenceAssemblies.net20": "1.0.0"
+        }
+      },
+      "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.0": {
+        "type": "package",
+        "build": {
+          "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.NETFramework.ReferenceAssemblies/1.0.0": {
+      "sha512": "7D2TMufjGiowmt0E941kVoTIS+GTNzaPopuzM1/1LSaJAdJdBrVP0SkZW7AgDd0a2U1DjsIeaKG1wxGVBNLDMw==",
+      "type": "package",
+      "path": "microsoft.netframework.referenceassemblies/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
+        "microsoft.netframework.referenceassemblies.nuspec"
+      ]
+    },
+    "Microsoft.NETFramework.ReferenceAssemblies.net20/1.0.0": {
+      "sha512": "TefPFUtqImwDrRzM6wTZnWpvkOotqK4KT/LnSi7zsJsNBrnQ76nuG4YKMrEPfOK+Q2KmsAh+m5vWXKkhO9lohQ==",
+      "type": "package",
+      "path": "microsoft.netframework.referenceassemblies.net20/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/.NETFramework/v2.0/Accessibility.dll",
+        "build/.NETFramework/v2.0/AspNetMMCExt.dll",
+        "build/.NETFramework/v2.0/CustomMarshalers.dll",
+        "build/.NETFramework/v2.0/IEExecRemote.dll",
+        "build/.NETFramework/v2.0/IEHost.dll",
+        "build/.NETFramework/v2.0/IIEHost.dll",
+        "build/.NETFramework/v2.0/ISymWrapper.dll",
+        "build/.NETFramework/v2.0/Microsoft.Build.Engine.dll",
+        "build/.NETFramework/v2.0/Microsoft.Build.Framework.dll",
+        "build/.NETFramework/v2.0/Microsoft.Build.Tasks.dll",
+        "build/.NETFramework/v2.0/Microsoft.Build.Utilities.dll",
+        "build/.NETFramework/v2.0/Microsoft.JScript.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualBasic.Compatibility.Data.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualBasic.Compatibility.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualBasic.Vsa.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualBasic.dll",
+        "build/.NETFramework/v2.0/Microsoft.VisualC.dll",
+        "build/.NETFramework/v2.0/Microsoft.Vsa.Vb.CodeDOMProcessor.dll",
+        "build/.NETFramework/v2.0/Microsoft.Vsa.dll",
+        "build/.NETFramework/v2.0/Microsoft_VsaVb.dll",
+        "build/.NETFramework/v2.0/RedistList/FrameworkList.xml",
+        "build/.NETFramework/v2.0/SubsetList/Client.xml",
+        "build/.NETFramework/v2.0/System.Configuration.Install.dll",
+        "build/.NETFramework/v2.0/System.Data.OracleClient.dll",
+        "build/.NETFramework/v2.0/System.Data.SqlXml.dll",
+        "build/.NETFramework/v2.0/System.Data.dll",
+        "build/.NETFramework/v2.0/System.Deployment.dll",
+        "build/.NETFramework/v2.0/System.Design.dll",
+        "build/.NETFramework/v2.0/System.DirectoryServices.Protocols.dll",
+        "build/.NETFramework/v2.0/System.DirectoryServices.dll",
+        "build/.NETFramework/v2.0/System.Drawing.Design.dll",
+        "build/.NETFramework/v2.0/System.Drawing.dll",
+        "build/.NETFramework/v2.0/System.EnterpriseServices.Thunk.dll",
+        "build/.NETFramework/v2.0/System.EnterpriseServices.Wrapper.dll",
+        "build/.NETFramework/v2.0/System.EnterpriseServices.dll",
+        "build/.NETFramework/v2.0/System.Management.dll",
+        "build/.NETFramework/v2.0/System.Messaging.dll",
+        "build/.NETFramework/v2.0/System.Runtime.Remoting.dll",
+        "build/.NETFramework/v2.0/System.Runtime.Serialization.Formatters.Soap.dll",
+        "build/.NETFramework/v2.0/System.Security.dll",
+        "build/.NETFramework/v2.0/System.ServiceProcess.dll",
+        "build/.NETFramework/v2.0/System.Transactions.dll",
+        "build/.NETFramework/v2.0/System.Web.Mobile.dll",
+        "build/.NETFramework/v2.0/System.Web.RegularExpressions.dll",
+        "build/.NETFramework/v2.0/System.Web.Services.dll",
+        "build/.NETFramework/v2.0/System.Web.dll",
+        "build/.NETFramework/v2.0/System.Windows.Forms.dll",
+        "build/.NETFramework/v2.0/System.Xml.dll",
+        "build/.NETFramework/v2.0/System.configuration.dll",
+        "build/.NETFramework/v2.0/System.dll",
+        "build/.NETFramework/v2.0/cscompmgd.dll",
+        "build/.NETFramework/v2.0/mscorlib.dll",
+        "build/.NETFramework/v2.0/sysglobl.dll",
+        "build/Microsoft.NETFramework.ReferenceAssemblies.net20.targets",
+        "microsoft.netframework.referenceassemblies.net20.1.0.0.nupkg.sha512",
+        "microsoft.netframework.referenceassemblies.net20.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v2.0": [
+      "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Justin D-Z\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\Documents\\GitHub\\DrunkenBoxing\\PluginCore\\PluginCore.csproj",
+      "projectName": "PluginCore",
+      "projectPath": "D:\\Documents\\GitHub\\DrunkenBoxing\\PluginCore\\PluginCore.csproj",
+      "packagesPath": "C:\\Users\\Justin D-Z\\.nuget\\packages\\",
+      "outputPath": "D:\\Documents\\GitHub\\DrunkenBoxing\\PluginCore\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\Justin D-Z\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net2.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net20": {
+          "targetAlias": "net2.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net20": {
+        "targetAlias": "net2.0",
+        "dependencies": {
+          "Microsoft.NETFramework.ReferenceAssemblies": {
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[1.0.0, )",
+            "autoReferenced": true
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
+      }
+    },
+    "runtimes": {
+      "x86": {
+        "#import": []
+      }
+    }
+  }
+}

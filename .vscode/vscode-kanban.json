@@ -1,0 +1,118 @@
+{
+  "todo": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:28:46.160Z",
+      "id": "7",
+      "references": [],
+      "title": "Add \"boss\" detection for Enemy based on HP value"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:24.927Z",
+      "id": "4",
+      "references": [],
+      "title": "Combat automation - bolt + ring"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:57.919Z",
+      "id": "6",
+      "references": [],
+      "title": "Combat spell rotation (not just bolt/ring)"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T15:00:56.898Z",
+      "id": "8",
+      "references": [],
+      "title": "JSON config file"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:39.033Z",
+      "id": "5",
+      "references": [],
+      "title": "Select bolt spell by current skill value"
+    }
+  ],
+  "in-progress": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T20:18:00.441Z",
+      "id": "11",
+      "references": [],
+      "title": "Git!"
+    }
+  ],
+  "testing": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:15.832Z",
+      "id": "3",
+      "references": [],
+      "title": "Enemy tracking"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T15:49:11.969Z",
+      "id": "9",
+      "references": [],
+      "title": "Figure out my starting coords"
+    }
+  ],
+  "done": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T21:55:12.020Z",
+      "id": "12",
+      "references": [],
+      "title": "/db test caster"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:09.200Z",
+      "id": "2",
+      "references": [],
+      "title": "Caster selection by target race"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T18:41:18.542Z",
+      "id": "10",
+      "references": [],
+      "title": "Chat command to re-detect casters, mountain retreat spells"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:05:40.763Z",
+      "id": "1",
+      "references": [],
+      "title": "Finish the Race enum"
+    }
+  ]
+}

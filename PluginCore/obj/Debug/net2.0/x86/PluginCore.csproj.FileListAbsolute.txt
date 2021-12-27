@@ -1,0 +1,11 @@
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\bin\Debug\net2.0\x86\PluginCore.dll
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\bin\Debug\net2.0\x86\PluginCore.pdb
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\bin\Debug\net2.0\x86\Decal.Adapter.dll
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\bin\Debug\net2.0\x86\Decal.Adapter.xml
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.csproj.AssemblyReference.cache
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.AssemblyInfoInputs.cache
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.AssemblyInfo.cs
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.csproj.CoreCompileInputs.cache
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.dll
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.pdb

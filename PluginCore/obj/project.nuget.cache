@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "X1rmRr4D0deXC9G55X+ujeYusefYs2BejKsFMgr1KrG66gZrfu5v049wNP1/mipZKWHWlPQRBRofXqHPqJiBsA==",
+  "success": true,
+  "projectFilePath": "D:\\Documents\\GitHub\\DrunkenBoxing\\PluginCore\\PluginCore.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Justin D-Z\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.0\\microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
+    "C:\\Users\\Justin D-Z\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net20\\1.0.0\\microsoft.netframework.referenceassemblies.net20.1.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
