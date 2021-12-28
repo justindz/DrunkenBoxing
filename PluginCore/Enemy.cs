@@ -28,6 +28,15 @@ namespace DrunkenBoxing {
         Mukkir = 89,
         Anekshay = 101,
     }
+    
+    public enum Priority {
+        Rage,
+        Focus,
+        Normal,
+        Last,
+        Never,
+    }
+
     public class Enemy {
         public static List<string> bosses = new List<string>() { // TODO move to config file
             "Sir Bellas",
@@ -36,6 +45,7 @@ namespace DrunkenBoxing {
         public int id;
         public string name;
         public Race race;
+        public Priority priority;
         public bool boss;
         public Position position;
         public double distanceFromPlayer;
@@ -44,6 +54,7 @@ namespace DrunkenBoxing {
             this.id = e.Id;
             this.name = e.Name;
             this.race = (Enum.IsDefined(typeof(Race), e.LongKeys[2]) ? (Race)e.LongKeys[2] : Race.None);
+            this.priority = Priority.Normal;
             this.boss = bosses.Contains(this.name);
         }
     }

@@ -20,7 +20,7 @@ namespace DrunkenBoxing {
         public List<Caster> casters;
         public Position position;
         public State state;
-        public Queue<Enemy> combatants;
+        public Dictionary<Priority, Queue<Enemy>> combatants;
         public List<Enemy> combatantsRingRange;
         public Spell lastSpellCast;
         public DateTime lastSpellCastShouldBeDoneAfter;
@@ -28,8 +28,13 @@ namespace DrunkenBoxing {
         private Character() {
             instance = this;
             state = State.Disabled;
-            spells = Spell.BuildSpellTable();            
-            combatants = new Queue<Enemy>();
+            spells = Spell.BuildSpellTable();
+            combatants = new Dictionary<Priority, Queue<Enemy>>(5);
+            combatants.Add(Priority.Rage, new Queue<Enemy>());
+            combatants.Add(Priority.Focus, new Queue<Enemy>());
+            combatants.Add(Priority.Normal, new Queue<Enemy>());
+            combatants.Add(Priority.Last, new Queue<Enemy>());
+            combatants.Add(Priority.Never, new Queue<Enemy>());
             combatantsRingRange = new List<Enemy>();
             lastSpellCast = null;
             lastSpellCastShouldBeDoneAfter = DateTime.MinValue;
@@ -43,11 +48,11 @@ namespace DrunkenBoxing {
                 if (state == State.Casting && (DateTime.UtcNow.CompareTo(lastSpellCastShouldBeDoneAfter) > 0))
                     state = State.Ready;
                 
-                if (combatants.Count == 0) return;
+                if (!ThereAreMoreTargets()) return;
                 if (CoreManager.Current.Actions.BusyState != 0) return;
 
                 if (state == State.Ready) {
-                    int casterId = SelectCasterByTarget(combatants.Peek()).id;
+                    int casterId = SelectCasterByTarget(GetNextTarget()).id;
                     int wieldedId = GetWieldedCasterId();
 
                     if (wieldedId == -1) {
@@ -71,17 +76,17 @@ namespace DrunkenBoxing {
 
                         if (combatantsRingRange.Count >= Settings.instance.ringMinimumCount) {
                             toCast = spells["Ring of Death"];
-                            Logger.LogMessage("There are " + combatantsRingRange.Count.ToString() + " enemies in ring range, so we're switching to a ring spell.");
+                            // Logger.LogMessage("There are " + combatantsRingRange.Count.ToString() + " enemies in ring range, so we're switching to a ring spell.");
                         }
 
                         lastSpellCast = toCast;
                         lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(toCast.animationSeconds);
-                        CoreManager.Current.Actions.CastSpell(toCast.id, combatants.Peek().id);
+                        CoreManager.Current.Actions.CastSpell(toCast.id, GetNextTarget().id);
                         // Logger.LogMessage("I'm casting " + lastSpellCast.id.ToString() + ".");
                     }
                 }
                 else if (state == State.WieldingCaster) {
-                    int casterId = SelectCasterByTarget(combatants.Peek()).id;
+                    int casterId = SelectCasterByTarget(GetNextTarget()).id;
 
                     if (GetWieldedCasterId() == casterId) {
                         state = State.Ready;
@@ -110,6 +115,45 @@ namespace DrunkenBoxing {
             } catch (Exception ex) {
                 Logger.LogError("Character.Core_ChatBoxMessage=" + e.Text, ex);
             }
+        }
+
+        public Enemy GetNextTarget() {
+            if (combatants[Priority.Rage].Count > 0)
+                return combatants[Priority.Rage].Peek();
+            else if (combatants[Priority.Focus].Count > 0)
+                return combatants[Priority.Focus].Peek();
+            else if (combatants[Priority.Normal].Count > 0)
+                return combatants[Priority.Normal].Peek();
+            else if (combatants[Priority.Last].Count > 0)
+                return combatants[Priority.Last].Peek();
+
+            return null;
+        }
+
+        public bool ThereAreMoreTargets() {
+            if (combatants[Priority.Rage].Count > 0)
+                return true;
+            else if (combatants[Priority.Focus].Count > 0)
+                return true;
+            else if (combatants[Priority.Normal].Count > 0)
+                return true;
+            else if (combatants[Priority.Last].Count > 0)
+                return true;
+
+            return false;
+        }
+
+        public bool IsTracked(Enemy e) {
+            if (combatants[Priority.Rage].Contains(e))
+                return true;
+            else if (combatants[Priority.Focus].Contains(e))
+                return true;
+            else if (combatants[Priority.Normal].Contains(e))
+                return true;
+            else if (combatants[Priority.Last].Contains(e))
+                return true;
+
+            return false;
         }
 
         public Caster SelectCasterByTarget(Enemy e) {
@@ -165,24 +209,24 @@ namespace DrunkenBoxing {
             else if (combatantsRingRange.Contains(enemy) && enemy.distanceFromPlayer > Settings.instance.ringDistance)
                 combatantsRingRange.Remove(enemy);
 
-            if (!combatants.Contains(enemy) && enemy.distanceFromPlayer <= Settings.instance.fightDistance)
-                combatants.Enqueue(enemy);
-            else if (combatants.Contains(enemy) && enemy.distanceFromPlayer > Settings.instance.fightDistance)
+            if (!IsTracked(enemy) && enemy.distanceFromPlayer <= Settings.instance.fightDistance)
+                combatants[enemy.priority].Enqueue(enemy);
+            else if (IsTracked(enemy) && enemy.distanceFromPlayer > Settings.instance.fightDistance)
                 RemoveCombatant(enemy);
         }
 
         public void RemoveCombatant(Enemy enemy) {
-            if (combatants.Contains(enemy)) {
+            if (IsTracked(enemy)) {
                 Queue<Enemy> newCombatants = new Queue<Enemy>();
 
-                while (combatants.Count > 0) {
-                    Enemy e = combatants.Dequeue();
+                while (combatants[enemy.priority].Count > 0) {
+                    Enemy e = combatants[enemy.priority].Dequeue();
 
                     if (e.id != enemy.id)
                         newCombatants.Enqueue(e);
                 }
 
-                combatants = newCombatants;
+                combatants[enemy.priority] = newCombatants;
             }
 
             combatantsRingRange.Remove(enemy);

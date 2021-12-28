@@ -4,44 +4,6 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-27T12:59:01.129Z",
-      "id": "15",
-      "references": [],
-      "title": "Ghost monster handling"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-27T23:28:20.645Z",
-      "id": "21",
-      "references": [],
-      "title": "Help command"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T15:00:56.898Z",
-      "id": "8",
-      "references": [],
-      "title": "JSON config file"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T14:08:39.033Z",
-      "id": "5",
-      "references": [],
-      "title": "Select bolt spell by current skill value"
-    }
-  ],
-  "in-progress": [
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
       "creation_time": "2021-12-26T14:08:57.919Z",
       "id": "6",
       "references": [],
@@ -64,53 +26,41 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-27T14:48:50.679Z",
-      "id": "16",
+      "creation_time": "2021-12-27T12:59:01.129Z",
+      "id": "15",
       "references": [],
-      "title": "Target prioritization",
-      "description": {
-        "content": "Rage\nFocus\nNormal\nLast\nNever",
-        "mime": "text/markdown"
-      }
+      "title": "Ghost monster handling"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-27T23:28:20.645Z",
+      "id": "21",
+      "references": [],
+      "title": "Help command"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:39.033Z",
+      "id": "5",
+      "references": [],
+      "title": "Select bolt spell by current skill value"
+    }
+  ],
+  "in-progress": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T15:00:56.898Z",
+      "id": "8",
+      "references": [],
+      "title": "JSON config file"
     }
   ],
   "testing": [],
-  "done": [
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-28T01:08:32.084Z",
-      "id": "23",
-      "references": [],
-      "title": "Add animation durations for each of the spells"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T14:08:24.927Z",
-      "id": "4",
-      "references": [],
-      "title": "Add ring support"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-28T15:39:38.041Z",
-      "id": "26",
-      "references": [],
-      "title": "Enable/disable commands"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-28T12:56:33.334Z",
-      "id": "25",
-      "references": [],
-      "title": "Use spell words in chat to confirm cast and start the cooldown timer"
-    }
-  ]
+  "done": []
 }

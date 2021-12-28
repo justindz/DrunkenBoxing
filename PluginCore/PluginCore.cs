@@ -101,12 +101,14 @@ namespace DrunkenBoxing {
                         else if (noun.StartsWith("combatants")) {
                             string output = "Current combatants are:";
 
-                            foreach (Enemy combatant in Character.instance.combatants) {
-                                output += " " + combatant.name + ",";
+                            foreach (KeyValuePair<Priority, Queue<Enemy>> kvp in Character.instance.combatants) {
+                                foreach (Enemy combatant in kvp.Value) {
+                                    output += " " + combatant.name + ",";
+                                }
                             }
 
                             Chat(output.TrimEnd(','));
-                            Chat("The next one I want to eff up is " + Character.instance.combatants.Peek().name);
+                            Chat("The next one I want to eff up is " + Character.instance.GetNextTarget().name);
                             Chat("There are " + Character.instance.combatantsRingRange.Count.ToString() + " enemies in ring range.");
                         }
                         else if (noun.StartsWith("state"))
