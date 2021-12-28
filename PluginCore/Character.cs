@@ -7,7 +7,8 @@ namespace DrunkenBoxing {
     {
         Unready,
         Ready,
-        ChangingCaster,
+        Unwielding,
+        WieldingCaster,
         SwitchingToMagicMode,
         Casting,
     }
@@ -44,34 +45,48 @@ namespace DrunkenBoxing {
 
                 if (state == State.Ready) {
                     int casterId = SelectCasterByTarget(combatants.Peek()).id;
-                    
-                    if (false) { // item being wielded by the player should have wielder DID = player id
+                    int wieldedId = GetWieldedCasterId();
+
+                    if (wieldedId == -1) {
                         Decal.Adapter.CoreManager.Current.Actions.AutoWield(casterId);
-                        state = State.ChangingCaster;
-                        Logger.LogMessage("I need to change casters for this target.");
+                        state = State.WieldingCaster;
+                        // Logger.LogMessage("I need to equip the caster for this target.");
+                    }
+                    else if (wieldedId != -1 && wieldedId != casterId) {
+                        Decal.Adapter.CoreManager.Current.Actions.MoveItem(wieldedId, id, 0, false);
+                        state = State.Unwielding;
+                        // Logger.LogMessage("I need to unequip the current caster for this target.");
                     }
                     else if (Decal.Adapter.CoreManager.Current.Actions.CombatMode != CombatState.Magic) {
                         state = State.SwitchingToMagicMode;
                         Decal.Adapter.CoreManager.Current.Actions.SetCombatMode(CombatState.Magic);
-                        Logger.LogMessage("I need to get into magic combat mode.");
+                        // Logger.LogMessage("I need to get into magic combat mode.");
                     }
                     else {
                         lastSpellCast = spells["Incantation of Bloodstone Bolt"];
                         state = State.Casting;
                         Decal.Adapter.CoreManager.Current.Actions.CastSpell(lastSpellCast.id, combatants.Peek().id);
                         lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(2.0);
-                        Logger.LogMessage("I'm casting " + lastSpellCast.id.ToString() + ".");
+                        // Logger.LogMessage("I'm casting " + lastSpellCast.id.ToString() + ".");
                     }
                 }
-                else if (state == State.ChangingCaster) {
+                else if (state == State.WieldingCaster) {
                     int casterId = SelectCasterByTarget(combatants.Peek()).id;
-                    // If item being currently wielded has id = casterID
-                        // state = State.Ready;
-                    Logger.LogMessage("I've equipped the right caster for the target and I'm ready to cast.");
+
+                    if (GetWieldedCasterId() == casterId) {
+                        state = State.Ready;
+                        // Logger.LogMessage("I've equipped the right caster for the target and I'm ready to cast.");
+                    }
+                }
+                else if (state == State.Unwielding) {
+                    if (GetWieldedCasterId() == -1) {
+                        state = State.Ready;
+                        // Logger.LogMessage("I've unequipped an incorrect caster for the target and I'm ready to equip the right one.");
+                    }
                 }
                 else if (state == State.SwitchingToMagicMode && Decal.Adapter.CoreManager.Current.Actions.CombatMode == CombatState.Magic) {
                     state = State.Ready;
-                    Logger.LogMessage("I've switched to magic combat mode.");
+                    // Logger.LogMessage("I've switched to magic combat mode.");
                 }
             } catch (Exception ex) { Logger.LogError("Character.Update=" + state.ToString(), ex); }
         }
@@ -107,6 +122,20 @@ namespace DrunkenBoxing {
 
                 return best;
             }
+        }
+
+        public int GetWieldedCasterId() {
+            WorldObjectCollection inv = Decal.Adapter.CoreManager.Current.WorldFilter.GetInventory();
+
+            foreach (WorldObject item in inv) {
+                if (item.ObjectClass == ObjectClass.WandStaffOrb) {
+                    if (item.Values(LongValueKey.Wielder) == id) {
+                        return item.Id;
+                    }
+                }
+            }
+
+            return -1;
         }
 
         public void AddCombatant(Enemy enemy) {

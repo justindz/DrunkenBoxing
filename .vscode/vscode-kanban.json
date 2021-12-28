@@ -4,28 +4,19 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
+      "creation_time": "2021-12-26T14:08:57.919Z",
+      "id": "6",
+      "references": [],
+      "title": "Add DOT support"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
       "creation_time": "2021-12-27T18:49:44.739Z",
       "id": "19",
       "references": [],
       "title": "Check for components before casting"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T14:08:24.927Z",
-      "id": "4",
-      "references": [],
-      "title": "Combat automation - bolt + ring"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T14:08:57.919Z",
-      "id": "6",
-      "references": [],
-      "title": "Combat spell rotation (not just bolt/ring)"
     },
     {
       "assignedTo": {
@@ -78,121 +69,30 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-28T00:25:50.901Z",
-      "id": "22",
+      "creation_time": "2021-12-28T01:08:32.084Z",
+      "id": "23",
       "references": [],
-      "title": "Why is it spam casting insanely fast?"
+      "title": "Add animation durations for each of the spells"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:24.927Z",
+      "id": "4",
+      "references": [],
+      "title": "Add ring support"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-28T01:12:31.915Z",
+      "id": "24",
+      "references": [],
+      "title": "Change settings via CLI"
     }
   ],
   "testing": [],
-  "done": [
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T21:55:12.020Z",
-      "id": "12",
-      "references": [],
-      "title": "/db test caster"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-27T02:31:07.253Z",
-      "id": "14",
-      "references": [],
-      "title": "Add /db test distance command"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T14:08:09.200Z",
-      "id": "2",
-      "references": [],
-      "title": "Caster selection by target race"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T18:41:18.542Z",
-      "id": "10",
-      "references": [],
-      "title": "Chat command to re-detect casters, mountain retreat spells"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-27T02:21:52.991Z",
-      "id": "13",
-      "references": [],
-      "title": "Detect enemies within combat range"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T14:08:15.832Z",
-      "id": "3",
-      "references": [],
-      "title": "Enemy tracking"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-27T15:28:27.605Z",
-      "id": "18",
-      "references": [],
-      "title": "Fight the current target"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T15:49:11.969Z",
-      "id": "9",
-      "references": [],
-      "title": "Figure out my starting coords"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T14:05:40.763Z",
-      "id": "1",
-      "references": [],
-      "title": "Finish the Race enum"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-27T19:34:24.437Z",
-      "id": "20",
-      "references": [],
-      "title": "Fix the null reference exceptions"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T20:18:00.441Z",
-      "id": "11",
-      "references": [],
-      "title": "Git!"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-27T14:48:58.547Z",
-      "id": "17",
-      "references": [],
-      "title": "Target queue"
-    }
-  ]
+  "done": []
 }
