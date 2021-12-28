@@ -11,10 +11,10 @@ namespace DrunkenBoxing {
             sw.Close();
         }
 
-        public static void LogError(Exception ex) {
+        public static void LogError(string context, Exception ex) {
             StreamWriter sw = new StreamWriter("DrunkenBoxing_" + DateTime.Today.ToString("D").Replace(", ", "_") + ".log", true);
             sw.Write(DateTime.Now.ToString());
-            sw.Write("[ERROR - " + ex.Source + "]: ");
+            sw.Write("[ERROR - " + context + "]: ");
             sw.Write(ex.Message + "\n");
             sw.Close();
         }

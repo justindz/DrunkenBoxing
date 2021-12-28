@@ -1,5 +1,6 @@
 using Decal.Adapter.Wrappers;
 using System;
+using System.Collections.Generic;
 
 namespace DrunkenBoxing {
     public enum Race
@@ -27,21 +28,22 @@ namespace DrunkenBoxing {
         Mukkir = 89,
         Anekshay = 101,
     }
-
     public class Enemy {
+        public static List<string> bosses = new List<string>() { // TODO move to config file
+            "Tremendous Monouga",
+        };
         public int id;
         public string name;
         public Race race;
         public bool boss;
-        public CoordsObject coords;
+        public Position position;
         public double distanceFromPlayer;
 
         public Enemy(WorldObject e) {
             this.id = e.Id;
             this.name = e.Name;
             this.race = (Enum.IsDefined(typeof(Race), e.LongKeys[2]) ? (Race)e.LongKeys[2] : Race.None);
-            this.boss = false;
-            this.coords = e.Coordinates();
+            this.boss = bosses.Contains(this.name);
         }
     }
 }

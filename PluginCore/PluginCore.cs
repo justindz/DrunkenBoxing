@@ -5,27 +5,41 @@ using System.Collections.Generic;
 
 namespace DrunkenBoxing {
     public class PluginCore : PluginBase {
+        private DateTime lastInterval = DateTime.MinValue;
+
         public void Chat(string str) {
             Host.Actions.AddChatText("[DB] " + str, 1);
             Logger.LogMessage(str);
         }
 
         protected override void Startup() {
+            Core.RenderFrame += Core_RenderFrame;
             Core.CharacterFilter.LoginComplete += CharacterFilter_LoginComplete;
             Core.WorldFilter.CreateObject += World.instance.WorldFilter_CreateObject;
-            Core.WorldFilter.ChangeObject += World.instance.WorldFilter_ChangeObject;
+            Core.EchoFilter.ServerDispatch += World.instance.EchoFilter_ServerDispatch;
             Core.WorldFilter.ReleaseObject += World.instance.WorldFilter_ReleaseOject;
             Core.CommandLineText += Core_CommandLineText;
         }
 
         protected override void Shutdown()
         {
+            Logger.LogMessage("DrunkenBoxing time has ended. For now.\n");
             Core.CharacterFilter.LoginComplete -= CharacterFilter_LoginComplete;
             Core.WorldFilter.CreateObject -= World.instance.WorldFilter_CreateObject;
-            Core.WorldFilter.ChangeObject -= World.instance.WorldFilter_ChangeObject;
+            Core.EchoFilter.ServerDispatch -= World.instance.EchoFilter_ServerDispatch;
             Core.WorldFilter.ReleaseObject -= World.instance.WorldFilter_ReleaseOject;
             Core.CommandLineText -= Core_CommandLineText;
-            Logger.LogMessage("DrunkenBoxing time has ended. For now.\n");
+            Core.RenderFrame -= Core_RenderFrame;
+        }
+
+        private void Core_RenderFrame(object sender, EventArgs e) {
+            try {
+                if (DateTime.UtcNow - lastInterval >= TimeSpan.FromMilliseconds(100.0)) {
+                    double deltaTime = DateTime.UtcNow.Subtract(lastInterval).Milliseconds;
+                    lastInterval = DateTime.UtcNow;
+                    Character.instance.Update(deltaTime);
+                }
+            } catch (Exception ex) { Logger.LogError("PluginCore.Core_RenderFrame", ex); }
         }
 
         private void Core_CommandLineText(object sender, ChatParserInterceptEventArgs e) {
@@ -55,13 +69,42 @@ namespace DrunkenBoxing {
 
                             Chat("I would use " + Character.instance.SelectCasterByTarget(World.instance.enemies[sel.Id]).name + " on that target.");
                         }
+                        else if (noun.StartsWith("distance")) {
+                            WorldObject sel = Core.WorldFilter[Host.Actions.CurrentSelection];
+
+                            if (sel == null || sel.ObjectClass != ObjectClass.Monster) {
+                                Chat("Select a monster to test distance.");
+                                return;
+                            }
+
+                            Chat("You are " + World.DistanceBetween(Character.instance.position, World.instance.enemies[sel.Id].position).ToString() + " from that.");
+                        }
+                        else if (noun.StartsWith("enemies")) {
+                            string output = "Current tracked enemies are:";
+
+                            foreach (KeyValuePair<int, Enemy> kvp in World.instance.enemies) {
+                                output += " " + kvp.Value.name + ",";
+                            }
+
+                            Chat(output.TrimEnd(','));
+                        }
+                        else if (noun.StartsWith("combatants")) {
+                            string output = "Current combatants are:";
+
+                            foreach (Enemy combatant in Character.instance.combatants) {
+                                output += " " + combatant.name + ",";
+                            }
+
+                            Chat(output.TrimEnd(','));
+                            Chat("The next one I want to eff up is " + Character.instance.combatants.Peek().name);
+                        }
                     }
                     else
                         Chat("Unrecognized command: " + command);
                 }
             } catch (Exception ex) {
                 e.Eat = true;
-                Logger.LogError(ex);
+                Logger.LogError("PluginCore.CoreCommandLineText=" + e.Text, ex);
             }
         }
 
@@ -70,31 +113,21 @@ namespace DrunkenBoxing {
             
             try {
                 Character.instance.id = Core.CharacterFilter.Id;
-                Character.instance.coords = Core.WorldFilter[Character.instance.id].Coordinates();
                 DetectMountainRetreatSpells();
                 DetectCasters();
             }
-            catch (Exception ex) { Logger.LogError(ex); }
+            catch (Exception ex) { Logger.LogError("PluginCore.CharacterFilter_LoginComplete", ex); }
         }
 
         private void DetectMountainRetreatSpells() {
             Logger.LogMessage("Updating Mountain Retreat Life spells list...");
-            List<Spell> newSpells = new List<Spell>();
 
-            Character.instance.spells.ForEach(
-                delegate(Spell sp) {
-                    if (Core.CharacterFilter.IsSpellKnown(sp.id)) {
-                        newSpells.Add(new Spell(sp.name, sp.id, true));
-                        Chat("Enabled: " + sp.name);
-                    }
-                    else {
-                        newSpells.Add(sp);
-                        Chat("Skipped: " + sp.name);
-                    }
+            foreach (KeyValuePair<string, Spell> entry in Character.instance.spells) {
+                if (Core.CharacterFilter.IsSpellKnown(entry.Value.id)) {
+                    Character.instance.spells[entry.Key].has = true;
+                    Chat("Enabled: " + entry.Key);
                 }
-            );
-
-            Character.instance.spells = newSpells;
+            }
         }
 
         private void DetectCasters() {
@@ -107,7 +140,7 @@ namespace DrunkenBoxing {
                     if (!item.LongKeys.Contains(159) || item.LongKeys[159] == 33) {
                         Caster c = Caster.BuildFromWorldObject(item);
                         Character.instance.casters.Add(c);
-                        Chat("Added life caster: " + c.ToString());
+                        Chat("Added life caster: " + c.ToString() + " at currented wielded location " + item.LongKeys[10].ToString());
                     }
                     else
                         Chat("Skipped caster: " + item.Name);

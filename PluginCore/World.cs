@@ -1,8 +1,27 @@
+using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using System;
 using System.Collections.Generic;
 
 namespace DrunkenBoxing {
+    public struct Position {
+        public int landcell;
+        public float x;
+        public float y;
+        public float z;
+
+        public Position(int landcell, float x, float y, float z) {
+            this.landcell = landcell;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public override string ToString()
+        {
+            return "[" + landcell + "] " + x + "|" + y + "|" + z;
+        }
+    }
     public class World {
         public static World instance = new World();
         public Dictionary<int, Enemy> enemies;
@@ -13,37 +32,71 @@ namespace DrunkenBoxing {
         }
 
         public void WorldFilter_CreateObject(object sender, CreateObjectEventArgs e) {
-            if (e.New.ObjectClass != ObjectClass.Monster) return;
-            if (enemies.ContainsKey(e.New.Id)) return;
-            Enemy enemy = new Enemy(e.New);
-            enemies.Add(e.New.Id, enemy);
-            Caster c = Character.instance.SelectCasterByTarget(enemy);
-            Logger.LogMessage("Enemy '" + enemy.name + "' added. Initial distance from player is " + DistanceBetween(e.New.Coordinates(), Character.instance.coords).ToString() + ". Caster = " + c.name + ".");
+            try {
+                if (e.New.ObjectClass == ObjectClass.Monster) {
+                    if (enemies.ContainsKey(e.New.Id)) return;
+
+                    Enemy enemy = new Enemy(e.New);
+                    enemy.position = new Position(0, (float)e.New.Offset().X, (float)e.New.Offset().Y, (float)e.New.Offset().Z);
+                    enemy.distanceFromPlayer = World.DistanceBetween(enemy.position, Character.instance.position);
+                    enemies.Add(e.New.Id, enemy);
+
+                    if (enemy.distanceFromPlayer <= Settings.instance.fightDistance)
+                        Character.instance.AddCombatant(enemy);
+                }
+                else if (e.New.ObjectClass == ObjectClass.Player && e.New.Id == Character.instance.id) {
+                    Character.instance.position = new Position(0, (float)e.New.Offset().X, (float)e.New.Offset().Y, (float)e.New.Offset().Z);;
+                    Logger.LogMessage("Character added at " + Character.instance.position.ToString() + ".");
+                }
+            } catch (Exception ex) { Logger.LogError("World.WorldFilter_Create_Object=" + e.New.Name, ex); }
         }
 
-        public void WorldFilter_ChangeObject(object sender, ChangeObjectEventArgs e) {
-            if (enemies.ContainsKey(e.Changed.Id))
-                enemies[e.Changed.Id].coords = e.Changed.Coordinates();
-            else if (e.Changed.Id == Character.instance.id)
-                Character.instance.coords = e.Changed.Coordinates();
-            else
-                return;
-            
-            // Update distance from player, trigger events if needed
+        public void EchoFilter_ServerDispatch(object sender, NetworkMessageEventArgs e) {
+            try {
+                if (e.Message.Type == 0xF748) {
+                    int id = e.Message.Value<int>("object");
+                    Position pos = PositionStructToPosition(e.Message.Struct("position"));
+
+                    if (Character.instance.id == id) {
+                        Character.instance.position = pos;
+
+                        foreach (KeyValuePair<int, Enemy> en in World.instance.enemies) {
+                            Enemy enemy = en.Value;
+                            enemy.distanceFromPlayer = World.DistanceBetween(Character.instance.position, enemy.position);
+
+                            if (enemy.distanceFromPlayer <= Settings.instance.fightDistance)
+                                Character.instance.AddCombatant(enemy);
+                            else
+                                Character.instance.RemoveCombatant(enemy);
+                        }
+                    }
+                    else if (enemies.ContainsKey(id)) {
+                        enemies[id].position = pos;
+                        double distanceFromPlayer = World.DistanceBetween(Character.instance.position, pos);
+                        enemies[id].distanceFromPlayer = distanceFromPlayer;
+
+                        if (distanceFromPlayer <= Settings.instance.fightDistance)
+                            Character.instance.AddCombatant(enemies[id]);
+                        else
+                            Character.instance.RemoveCombatant(enemies[id]);
+                    } else return;
+                }
+            } catch (Exception ex) { Logger.LogError("World.EchoFilter_ServerDispatch=" + e.Message.Type.ToString(), ex); }
         }
 
         public void WorldFilter_ReleaseOject(object sender, ReleaseObjectEventArgs e) {
             if (enemies.ContainsKey(e.Released.Id)) {
-                string name = enemies[e.Released.Id].name;
+                Character.instance.RemoveCombatant(enemies[e.Released.Id]);
                 enemies.Remove(e.Released.Id);
-                Logger.LogMessage("Enemy '" + name + "' released.");
             }
         }
 
-        public static double DistanceBetween(CoordsObject a, CoordsObject b) {
-            double nsDiff = (((a.NorthSouth * 10) + 1019.5) * 24) - (((b.NorthSouth * 10) + 1019.5) * 24);
-            double esDiff = (((a.EastWest * 10) + 1019.5) * 24) - (((b.EastWest * 10) + 1019.5) * 24);
-            return Math.Abs(Math.Sqrt(Math.Pow(Math.Abs(nsDiff), 2) + Math.Pow(Math.Abs(esDiff), 2)));
+        public static Position PositionStructToPosition(MessageStruct position) {
+            return new Position(position.Value<int>("landcell"), position.Value<float>("x"), position.Value<float>("y"), position.Value<float>("z"));
+        }
+
+        public static double DistanceBetween(Position a, Position b) {
+            return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z);
         }
     }
 }

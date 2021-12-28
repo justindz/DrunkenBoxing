@@ -4,10 +4,10 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-26T14:28:46.160Z",
-      "id": "7",
+      "creation_time": "2021-12-27T18:49:44.739Z",
+      "id": "19",
       "references": [],
-      "title": "Add \"boss\" detection for Enemy based on HP value"
+      "title": "Check for components before casting"
     },
     {
       "assignedTo": {
@@ -31,6 +31,24 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
+      "creation_time": "2021-12-27T12:59:01.129Z",
+      "id": "15",
+      "references": [],
+      "title": "Ghost monster handling"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-27T23:28:20.645Z",
+      "id": "21",
+      "references": [],
+      "title": "Help command"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
       "creation_time": "2021-12-26T15:00:56.898Z",
       "id": "8",
       "references": [],
@@ -44,6 +62,15 @@
       "id": "5",
       "references": [],
       "title": "Select bolt spell by current skill value"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-27T14:48:50.679Z",
+      "id": "16",
+      "references": [],
+      "title": "Target prioritization"
     }
   ],
   "in-progress": [
@@ -51,32 +78,13 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-26T20:18:00.441Z",
-      "id": "11",
+      "creation_time": "2021-12-27T15:28:27.605Z",
+      "id": "18",
       "references": [],
-      "title": "Git!"
+      "title": "Fight the current target"
     }
   ],
-  "testing": [
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T14:08:15.832Z",
-      "id": "3",
-      "references": [],
-      "title": "Enemy tracking"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T15:49:11.969Z",
-      "id": "9",
-      "references": [],
-      "title": "Figure out my starting coords"
-    }
-  ],
+  "testing": [],
   "done": [
     {
       "assignedTo": {
@@ -86,6 +94,15 @@
       "id": "12",
       "references": [],
       "title": "/db test caster"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-27T02:31:07.253Z",
+      "id": "14",
+      "references": [],
+      "title": "Add /db test distance command"
     },
     {
       "assignedTo": {
@@ -109,10 +126,64 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
+      "creation_time": "2021-12-27T02:21:52.991Z",
+      "id": "13",
+      "references": [],
+      "title": "Detect enemies within combat range"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:15.832Z",
+      "id": "3",
+      "references": [],
+      "title": "Enemy tracking"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T15:49:11.969Z",
+      "id": "9",
+      "references": [],
+      "title": "Figure out my starting coords"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
       "creation_time": "2021-12-26T14:05:40.763Z",
       "id": "1",
       "references": [],
       "title": "Finish the Race enum"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-27T19:34:24.437Z",
+      "id": "20",
+      "references": [],
+      "title": "Fix the null reference exceptions"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T20:18:00.441Z",
+      "id": "11",
+      "references": [],
+      "title": "Git!"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-27T14:48:58.547Z",
+      "id": "17",
+      "references": [],
+      "title": "Target queue"
     }
   ]
 }

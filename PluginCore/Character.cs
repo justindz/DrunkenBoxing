@@ -1,40 +1,85 @@
 using Decal.Adapter.Wrappers;
+using System;
 using System.Collections.Generic;
 
 namespace DrunkenBoxing {
+    public enum State
+    {
+        Unready,
+        Ready,
+        ChangingCaster,
+        SwitchingToMagicMode,
+        Casting,
+    }
     class Character {
         public static Character instance = new Character();
         public int id;
-        public List<Spell> spells;
+        public Dictionary<string, Spell> spells;
         public List<Caster> casters;
-        public CoordsObject coords;
+        public Position position;
+        public State state;
+        public Queue<Enemy> combatants;
+        public Spell lastSpellCast;
+        public DateTime lastSpellCastShouldBeDoneAfter;
 
         private Character() {
             instance = this;
-            this.spells = new List<Spell>();
-            this.spells.Add(new Spell("Bloodstone Bolt I", 5525, false));
-            this.spells.Add(new Spell("Bloodstone Bolt II", 5526, false));
-            this.spells.Add(new Spell("Bloodstone Bolt III", 5527, false));
-            this.spells.Add(new Spell("Bloodstone Bolt IV", 5528, false));
-            this.spells.Add(new Spell("Bloodstone Bolt V", 5529, false));
-            this.spells.Add(new Spell("Bloodstone Bolt VI", 5530, false));
-            this.spells.Add(new Spell("Bloodstone Bolt VII", 5531, false));
-            this.spells.Add(new Spell("Incantation of Bloodstone Bolt", 5532, false));
-            this.spells.Add(new Spell("Hunter's Lash", 2970, false));
-            this.spells.Add(new Spell("Burning Curse", 4716, false));
-            this.spells.Add(new Spell("Ring of Death", 4239, false));
-            this.spells.Add(new Spell("Exsanguinating Wave", 3940, false));
-            this.spells.Add(new Spell("Corrupted Touch", 5980, false));
-            this.spells.Add(new Spell("Ward of Rebirth", 3071, false));
-            this.spells.Add(new Spell("Fellowship Heal I", 2981, false));
-            this.spells.Add(new Spell("Blessing of Unity", 5314, false));
+            state = State.Unready;
+            spells = Spell.BuildSpellTable();            
+            combatants = new Queue<Enemy>();
+            lastSpellCast = null;
+            lastSpellCastShouldBeDoneAfter = DateTime.MinValue;
+            state = State.Ready;
         }
 
-        public bool IsSpellEnabled(string name) {
-            if (spells.Exists(x => x.name == name && x.has == true))
-                return true;
-            
-            return false;
+        public void Update(double deltaTime) {
+            try {
+                if (state == State.Unready) return;
+
+                if (state == State.Casting && DateTime.UtcNow > lastSpellCastShouldBeDoneAfter)
+                    state = State.Ready;
+                else
+                    return;
+                
+                if (combatants.Count == 0) return;
+                if (Decal.Adapter.CoreManager.Current.Actions.BusyState != 0) return;
+
+                if (state == State.Ready) {
+                    int casterId = SelectCasterByTarget(combatants.Peek()).id;
+                    
+                    if (false) { // if casterId is not the one curently being wielded
+                        Decal.Adapter.CoreManager.Current.Actions.AutoWield(casterId);
+                        state = State.ChangingCaster;
+                        Logger.LogMessage("I need to change casters for this target.");
+                    }
+                    else if (Decal.Adapter.CoreManager.Current.Actions.CombatMode != CombatState.Magic) {
+                        state = State.SwitchingToMagicMode;
+                        Decal.Adapter.CoreManager.Current.Actions.SetCombatMode(CombatState.Magic);
+                        Logger.LogMessage("I need to get into magic combat mode.");
+                    }
+                    else {
+                        lastSpellCast = spells["Incantation of Bloodstone Bolt"];
+                        state = State.Casting;
+                        Decal.Adapter.CoreManager.Current.Actions.CastSpell(lastSpellCast.id, combatants.Peek().id);
+                        Logger.LogMessage("I'm casting " + lastSpellCast.id.ToString() + ".");
+                    }
+                }
+                else if (state == State.ChangingCaster) {
+                    int casterId = SelectCasterByTarget(combatants.Peek()).id;
+                    // If casterId is the one currently being wielded
+                        // state = State.Ready;
+                    Logger.LogMessage("I've equipped the right caster for the target and I'm ready to cast.");
+                }
+                else if (state == State.SwitchingToMagicMode && Decal.Adapter.CoreManager.Current.Actions.CombatMode == CombatState.Magic) {
+                    state = State.Ready;
+                    Logger.LogMessage("I've switched to magic combat mode.");
+                }
+            } catch (Exception ex) { Logger.LogError("Character.Update=" + state.ToString(), ex); }
+        }
+        
+        public void CharacterFilter_SpellCast(object sender, SpellCastEventArgs e) {
+            if (e.SpellId == lastSpellCast.id)
+                lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.Add(TimeSpan.FromSeconds(30.0));
         }
 
         public Caster SelectCasterByTarget(Enemy e) {
@@ -67,6 +112,27 @@ namespace DrunkenBoxing {
                 }
 
                 return best;
+            }
+        }
+
+        public void AddCombatant(Enemy enemy) {
+            if (!combatants.Contains(enemy)) {
+                combatants.Enqueue(enemy);
+            }
+        }
+
+        public void RemoveCombatant(Enemy enemy) {
+            if (combatants.Contains(enemy)) {
+                Queue<Enemy> newCombatants = new Queue<Enemy>();
+
+                while (combatants.Count > 0) {
+                    Enemy e = combatants.Dequeue();
+
+                    if (e.id != enemy.id)
+                        newCombatants.Enqueue(e);
+                }
+
+                combatants = newCombatants;
             }
         }
     }
