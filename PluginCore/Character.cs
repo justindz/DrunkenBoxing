@@ -1,3 +1,4 @@
+using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using System;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using System.Collections.Generic;
 namespace DrunkenBoxing {
     public enum State
     {
-        Unready,
+        Disabled,
         Ready,
         Unwielding,
         WieldingCaster,
@@ -20,14 +21,16 @@ namespace DrunkenBoxing {
         public Position position;
         public State state;
         public Queue<Enemy> combatants;
+        public List<Enemy> combatantsRingRange;
         public Spell lastSpellCast;
         public DateTime lastSpellCastShouldBeDoneAfter;
 
         private Character() {
             instance = this;
-            state = State.Unready;
+            state = State.Disabled;
             spells = Spell.BuildSpellTable();            
             combatants = new Queue<Enemy>();
+            combatantsRingRange = new List<Enemy>();
             lastSpellCast = null;
             lastSpellCastShouldBeDoneAfter = DateTime.MinValue;
             state = State.Ready;
@@ -35,38 +38,45 @@ namespace DrunkenBoxing {
 
         public void Update(double deltaTime) {
             try {
-                if (state == State.Unready) return;
+                if (state == State.Disabled) return;
 
                 if (state == State.Casting && (DateTime.UtcNow.CompareTo(lastSpellCastShouldBeDoneAfter) > 0))
                     state = State.Ready;
                 
                 if (combatants.Count == 0) return;
-                if (Decal.Adapter.CoreManager.Current.Actions.BusyState != 0) return;
+                if (CoreManager.Current.Actions.BusyState != 0) return;
 
                 if (state == State.Ready) {
                     int casterId = SelectCasterByTarget(combatants.Peek()).id;
                     int wieldedId = GetWieldedCasterId();
 
                     if (wieldedId == -1) {
-                        Decal.Adapter.CoreManager.Current.Actions.AutoWield(casterId);
+                        CoreManager.Current.Actions.AutoWield(casterId);
                         state = State.WieldingCaster;
                         // Logger.LogMessage("I need to equip the caster for this target.");
                     }
                     else if (wieldedId != -1 && wieldedId != casterId) {
-                        Decal.Adapter.CoreManager.Current.Actions.MoveItem(wieldedId, id, 0, false);
+                        CoreManager.Current.Actions.MoveItem(wieldedId, id, 0, false);
                         state = State.Unwielding;
                         // Logger.LogMessage("I need to unequip the current caster for this target.");
                     }
-                    else if (Decal.Adapter.CoreManager.Current.Actions.CombatMode != CombatState.Magic) {
+                    else if (CoreManager.Current.Actions.CombatMode != CombatState.Magic) {
                         state = State.SwitchingToMagicMode;
                         Decal.Adapter.CoreManager.Current.Actions.SetCombatMode(CombatState.Magic);
                         // Logger.LogMessage("I need to get into magic combat mode.");
                     }
                     else {
-                        lastSpellCast = spells["Incantation of Bloodstone Bolt"];
                         state = State.Casting;
-                        Decal.Adapter.CoreManager.Current.Actions.CastSpell(lastSpellCast.id, combatants.Peek().id);
-                        lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(2.0);
+                        Spell toCast = spells["Incantation of Bloodstone Bolt"];
+
+                        if (combatantsRingRange.Count >= Settings.instance.ringMinimumCount) {
+                            toCast = spells["Ring of Death"];
+                            Logger.LogMessage("There are " + combatantsRingRange.Count.ToString() + " enemies in ring range, so we're switching to a ring spell.");
+                        }
+
+                        lastSpellCast = toCast;
+                        lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(toCast.animationSeconds);
+                        CoreManager.Current.Actions.CastSpell(toCast.id, combatants.Peek().id);
                         // Logger.LogMessage("I'm casting " + lastSpellCast.id.ToString() + ".");
                     }
                 }
@@ -84,11 +94,22 @@ namespace DrunkenBoxing {
                         // Logger.LogMessage("I've unequipped an incorrect caster for the target and I'm ready to equip the right one.");
                     }
                 }
-                else if (state == State.SwitchingToMagicMode && Decal.Adapter.CoreManager.Current.Actions.CombatMode == CombatState.Magic) {
+                else if (state == State.SwitchingToMagicMode && CoreManager.Current.Actions.CombatMode == CombatState.Magic) {
                     state = State.Ready;
                     // Logger.LogMessage("I've switched to magic combat mode.");
                 }
             } catch (Exception ex) { Logger.LogError("Character.Update=" + state.ToString(), ex); }
+        }
+
+        public void Core_ChatBoxMessage(object sender, ChatTextInterceptEventArgs e) {
+            try {
+                if (state == State.Casting && e.Color == 17 && e.Text.StartsWith("You say, \"" + lastSpellCast.text)) {
+                    lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(lastSpellCast.animationSeconds); // Set a more accurate wait time in case of input lag
+                    // Logger.LogMessage("Confirmed spell cast for " + lastSpellCast.id + ".");
+                }
+            } catch (Exception ex) {
+                Logger.LogError("Character.Core_ChatBoxMessage=" + e.Text, ex);
+            }
         }
 
         public Caster SelectCasterByTarget(Enemy e) {
@@ -125,7 +146,7 @@ namespace DrunkenBoxing {
         }
 
         public int GetWieldedCasterId() {
-            WorldObjectCollection inv = Decal.Adapter.CoreManager.Current.WorldFilter.GetInventory();
+            WorldObjectCollection inv = CoreManager.Current.WorldFilter.GetInventory();
 
             foreach (WorldObject item in inv) {
                 if (item.ObjectClass == ObjectClass.WandStaffOrb) {
@@ -138,10 +159,16 @@ namespace DrunkenBoxing {
             return -1;
         }
 
-        public void AddCombatant(Enemy enemy) {
-            if (!combatants.Contains(enemy)) {
+        public void UpdateCombatant(Enemy enemy) {
+            if (!combatantsRingRange.Contains(enemy) && enemy.distanceFromPlayer <= Settings.instance.ringDistance)
+                combatantsRingRange.Add(enemy);
+            else if (combatantsRingRange.Contains(enemy) && enemy.distanceFromPlayer > Settings.instance.ringDistance)
+                combatantsRingRange.Remove(enemy);
+
+            if (!combatants.Contains(enemy) && enemy.distanceFromPlayer <= Settings.instance.fightDistance)
                 combatants.Enqueue(enemy);
-            }
+            else if (combatants.Contains(enemy) && enemy.distanceFromPlayer > Settings.instance.fightDistance)
+                RemoveCombatant(enemy);
         }
 
         public void RemoveCombatant(Enemy enemy) {
@@ -157,6 +184,8 @@ namespace DrunkenBoxing {
 
                 combatants = newCombatants;
             }
+
+            combatantsRingRange.Remove(enemy);
         }
     }
 }

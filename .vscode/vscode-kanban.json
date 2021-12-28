@@ -4,24 +4,6 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-26T14:08:57.919Z",
-      "id": "6",
-      "references": [],
-      "title": "Add DOT support"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-27T18:49:44.739Z",
-      "id": "19",
-      "references": [],
-      "title": "Check for components before casting"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
       "creation_time": "2021-12-27T12:59:01.129Z",
       "id": "15",
       "references": [],
@@ -53,6 +35,30 @@
       "id": "5",
       "references": [],
       "title": "Select bolt spell by current skill value"
+    }
+  ],
+  "in-progress": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:57.919Z",
+      "id": "6",
+      "references": [],
+      "title": "Add DOT support"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-28T01:12:31.915Z",
+      "id": "24",
+      "references": [],
+      "title": "Change settings via CLI",
+      "details": {
+        "content": "Ensure ring range cannot be set above combat range.",
+        "mime": "text/markdown"
+      }
     },
     {
       "assignedTo": {
@@ -61,10 +67,15 @@
       "creation_time": "2021-12-27T14:48:50.679Z",
       "id": "16",
       "references": [],
-      "title": "Target prioritization"
+      "title": "Target prioritization",
+      "description": {
+        "content": "Rage\nFocus\nNormal\nLast\nNever",
+        "mime": "text/markdown"
+      }
     }
   ],
-  "in-progress": [
+  "testing": [],
+  "done": [
     {
       "assignedTo": {
         "name": "Justin D-Z"
@@ -87,12 +98,19 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-28T01:12:31.915Z",
-      "id": "24",
+      "creation_time": "2021-12-28T15:39:38.041Z",
+      "id": "26",
       "references": [],
-      "title": "Change settings via CLI"
+      "title": "Enable/disable commands"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-28T12:56:33.334Z",
+      "id": "25",
+      "references": [],
+      "title": "Use spell words in chat to confirm cast and start the cooldown timer"
     }
-  ],
-  "testing": [],
-  "done": []
+  ]
 }

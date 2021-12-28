@@ -42,7 +42,7 @@ namespace DrunkenBoxing {
                     enemies.Add(e.New.Id, enemy);
 
                     if (enemy.distanceFromPlayer <= Settings.instance.fightDistance)
-                        Character.instance.AddCombatant(enemy);
+                        Character.instance.UpdateCombatant(enemy);
                 }
                 else if (e.New.ObjectClass == ObjectClass.Player && e.New.Id == Character.instance.id) {
                     Character.instance.position = new Position(0, (float)e.New.Offset().X, (float)e.New.Offset().Y, (float)e.New.Offset().Z);;
@@ -63,22 +63,13 @@ namespace DrunkenBoxing {
                         foreach (KeyValuePair<int, Enemy> en in World.instance.enemies) {
                             Enemy enemy = en.Value;
                             enemy.distanceFromPlayer = World.DistanceBetween(Character.instance.position, enemy.position);
-
-                            if (enemy.distanceFromPlayer <= Settings.instance.fightDistance)
-                                Character.instance.AddCombatant(enemy);
-                            else
-                                Character.instance.RemoveCombatant(enemy);
+                            Character.instance.UpdateCombatant(enemy);
                         }
                     }
                     else if (enemies.ContainsKey(id)) {
                         enemies[id].position = pos;
-                        double distanceFromPlayer = World.DistanceBetween(Character.instance.position, pos);
-                        enemies[id].distanceFromPlayer = distanceFromPlayer;
-
-                        if (distanceFromPlayer <= Settings.instance.fightDistance)
-                            Character.instance.AddCombatant(enemies[id]);
-                        else
-                            Character.instance.RemoveCombatant(enemies[id]);
+                        enemies[id].distanceFromPlayer = World.DistanceBetween(Character.instance.position, pos);
+                        Character.instance.UpdateCombatant(enemies[id]);
                     } else return;
                 }
             } catch (Exception ex) { Logger.LogError("World.EchoFilter_ServerDispatch=" + e.Message.Type.ToString(), ex); }

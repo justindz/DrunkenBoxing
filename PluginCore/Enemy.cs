@@ -30,6 +30,7 @@ namespace DrunkenBoxing {
     }
     public class Enemy {
         public static List<string> bosses = new List<string>() { // TODO move to config file
+            "Sir Bellas",
             "Tremendous Monouga",
         };
         public int id;

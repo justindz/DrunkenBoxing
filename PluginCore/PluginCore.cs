@@ -19,6 +19,7 @@ namespace DrunkenBoxing {
             Core.EchoFilter.ServerDispatch += World.instance.EchoFilter_ServerDispatch;
             Core.WorldFilter.ReleaseObject += World.instance.WorldFilter_ReleaseOject;
             Core.CommandLineText += Core_CommandLineText;
+            Core.ChatBoxMessage += Character.instance.Core_ChatBoxMessage;
         }
 
         protected override void Shutdown()
@@ -29,7 +30,8 @@ namespace DrunkenBoxing {
             Core.EchoFilter.ServerDispatch -= World.instance.EchoFilter_ServerDispatch;
             Core.WorldFilter.ReleaseObject -= World.instance.WorldFilter_ReleaseOject;
             Core.CommandLineText -= Core_CommandLineText;
-            Core.RenderFrame -= Core_RenderFrame;            
+            Core.ChatBoxMessage -= Character.instance.Core_ChatBoxMessage;
+            Core.RenderFrame -= Core_RenderFrame;
         }
 
         private void Core_RenderFrame(object sender, EventArgs e) {
@@ -48,7 +50,15 @@ namespace DrunkenBoxing {
                     e.Eat = true;
                     string command = e.Text.Substring(4);
 
-                    if (command.StartsWith("update")) {
+                    if (command.StartsWith("off")) {
+                        Character.instance.state = State.Disabled;
+                        Chat("DrunkenBoxing disabled. Use \"/db on\" to re-enable.");
+                    }
+                    else if (command.StartsWith("on")) {
+                        Character.instance.state = State.Ready;
+                        Chat("DrunkenBoxing enabled. Use \"/db off\" to disable.");
+                    }
+                    else if (command.StartsWith("update")) {
                         string noun = command.Split(' ')[1];
 
                         if (noun.StartsWith("spells"))
@@ -97,7 +107,10 @@ namespace DrunkenBoxing {
 
                             Chat(output.TrimEnd(','));
                             Chat("The next one I want to eff up is " + Character.instance.combatants.Peek().name);
+                            Chat("There are " + Character.instance.combatantsRingRange.Count.ToString() + " enemies in ring range.");
                         }
+                        else if (noun.StartsWith("state"))
+                            Chat("State=" + Character.instance.state.ToString());
                     }
                     else
                         Chat("Unrecognized command: " + command);
