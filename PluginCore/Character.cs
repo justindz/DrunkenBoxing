@@ -36,10 +36,8 @@ namespace DrunkenBoxing {
             try {
                 if (state == State.Unready) return;
 
-                if (state == State.Casting && DateTime.UtcNow > lastSpellCastShouldBeDoneAfter)
+                if (state == State.Casting && (DateTime.UtcNow.CompareTo(lastSpellCastShouldBeDoneAfter) > 0))
                     state = State.Ready;
-                else
-                    return;
                 
                 if (combatants.Count == 0) return;
                 if (Decal.Adapter.CoreManager.Current.Actions.BusyState != 0) return;
@@ -47,7 +45,7 @@ namespace DrunkenBoxing {
                 if (state == State.Ready) {
                     int casterId = SelectCasterByTarget(combatants.Peek()).id;
                     
-                    if (false) { // if casterId is not the one curently being wielded
+                    if (false) { // item being wielded by the player should have wielder DID = player id
                         Decal.Adapter.CoreManager.Current.Actions.AutoWield(casterId);
                         state = State.ChangingCaster;
                         Logger.LogMessage("I need to change casters for this target.");
@@ -61,12 +59,13 @@ namespace DrunkenBoxing {
                         lastSpellCast = spells["Incantation of Bloodstone Bolt"];
                         state = State.Casting;
                         Decal.Adapter.CoreManager.Current.Actions.CastSpell(lastSpellCast.id, combatants.Peek().id);
+                        lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(2.0);
                         Logger.LogMessage("I'm casting " + lastSpellCast.id.ToString() + ".");
                     }
                 }
                 else if (state == State.ChangingCaster) {
                     int casterId = SelectCasterByTarget(combatants.Peek()).id;
-                    // If casterId is the one currently being wielded
+                    // If item being currently wielded has id = casterID
                         // state = State.Ready;
                     Logger.LogMessage("I've equipped the right caster for the target and I'm ready to cast.");
                 }
@@ -75,11 +74,6 @@ namespace DrunkenBoxing {
                     Logger.LogMessage("I've switched to magic combat mode.");
                 }
             } catch (Exception ex) { Logger.LogError("Character.Update=" + state.ToString(), ex); }
-        }
-        
-        public void CharacterFilter_SpellCast(object sender, SpellCastEventArgs e) {
-            if (e.SpellId == lastSpellCast.id)
-                lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.Add(TimeSpan.FromSeconds(30.0));
         }
 
         public Caster SelectCasterByTarget(Enemy e) {

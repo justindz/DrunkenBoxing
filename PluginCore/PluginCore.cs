@@ -29,7 +29,7 @@ namespace DrunkenBoxing {
             Core.EchoFilter.ServerDispatch -= World.instance.EchoFilter_ServerDispatch;
             Core.WorldFilter.ReleaseObject -= World.instance.WorldFilter_ReleaseOject;
             Core.CommandLineText -= Core_CommandLineText;
-            Core.RenderFrame -= Core_RenderFrame;
+            Core.RenderFrame -= Core_RenderFrame;            
         }
 
         private void Core_RenderFrame(object sender, EventArgs e) {

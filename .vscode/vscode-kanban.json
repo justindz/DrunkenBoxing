@@ -78,10 +78,10 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-27T15:28:27.605Z",
-      "id": "18",
+      "creation_time": "2021-12-28T00:25:50.901Z",
+      "id": "22",
       "references": [],
-      "title": "Fight the current target"
+      "title": "Why is it spam casting insanely fast?"
     }
   ],
   "testing": [],
@@ -139,6 +139,15 @@
       "id": "3",
       "references": [],
       "title": "Enemy tracking"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-27T15:28:27.605Z",
+      "id": "18",
+      "references": [],
+      "title": "Fight the current target"
     },
     {
       "assignedTo": {
