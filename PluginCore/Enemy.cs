@@ -38,10 +38,6 @@ namespace DrunkenBoxing {
     }
 
     public class Enemy {
-        public static List<string> bosses = new List<string>() { // TODO move to config file
-            "Sir Bellas",
-            "Tremendous Monouga",
-        };
         public int id;
         public string name;
         public Race race;
@@ -55,7 +51,7 @@ namespace DrunkenBoxing {
             this.name = e.Name;
             this.race = (Enum.IsDefined(typeof(Race), e.LongKeys[2]) ? (Race)e.LongKeys[2] : Race.None);
             this.priority = Priority.Normal;
-            this.boss = bosses.Contains(this.name);
+            this.boss = Settings.instance.bosses.Contains(this.name);
         }
     }
 }

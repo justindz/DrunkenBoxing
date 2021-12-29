@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "X1rmRr4D0deXC9G55X+ujeYusefYs2BejKsFMgr1KrG66gZrfu5v049wNP1/mipZKWHWlPQRBRofXqHPqJiBsA==",
+  "dgSpecHash": "/clyU/IRrBpZjbSw/wK6KWuoxS9YFOVlUmtPhJuBLvR/kgFrdhlwkXpQRg9B9FdPQquru8vDIllpUCO6UqhkcA==",
   "success": true,
   "projectFilePath": "D:\\Documents\\GitHub\\DrunkenBoxing\\PluginCore\\PluginCore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Justin D-Z\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.0\\microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
-    "C:\\Users\\Justin D-Z\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net20\\1.0.0\\microsoft.netframework.referenceassemblies.net20.1.0.0.nupkg.sha512"
+    "C:\\Users\\Justin D-Z\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net20\\1.0.0\\microsoft.netframework.referenceassemblies.net20.1.0.0.nupkg.sha512",
+    "C:\\Users\\Justin D-Z\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
   "logs": []
 }

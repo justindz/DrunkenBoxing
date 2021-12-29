@@ -4,6 +4,15 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
+      "creation_time": "2021-12-29T02:08:15.758Z",
+      "id": "30",
+      "references": [],
+      "title": "Add a verbosity setting that controls whether Chats are logged, debugs are logged, errors are logged."
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
       "creation_time": "2021-12-26T14:08:57.919Z",
       "id": "6",
       "references": [],
@@ -21,6 +30,15 @@
         "content": "Ensure ring range cannot be set above combat range.",
         "mime": "text/markdown"
       }
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-29T01:53:08.198Z",
+      "id": "29",
+      "references": [],
+      "title": "Disable VT Loot until combatants is clear, enable again when one is added?"
     },
     {
       "assignedTo": {
@@ -44,13 +62,42 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
+      "creation_time": "2021-12-28T23:53:11.086Z",
+      "id": "25",
+      "references": [],
+      "title": "README.md"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
       "creation_time": "2021-12-26T14:08:39.033Z",
       "id": "5",
       "references": [],
       "title": "Select bolt spell by current skill value"
     }
   ],
-  "in-progress": [
+  "in-progress": [],
+  "testing": [],
+  "done": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-29T00:37:31.904Z",
+      "id": "27",
+      "references": [],
+      "title": "Can settings dump to file pretty print?"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-29T00:38:37.786Z",
+      "id": "28",
+      "references": [],
+      "title": "Can settings dump/load use enum names instead of values?"
+    },
     {
       "assignedTo": {
         "name": "Justin D-Z"
@@ -59,8 +106,15 @@
       "id": "8",
       "references": [],
       "title": "JSON config file"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-29T00:36:45.010Z",
+      "id": "26",
+      "references": [],
+      "title": "Load config file, if present, on startup"
     }
-  ],
-  "testing": [],
-  "done": []
+  ]
 }

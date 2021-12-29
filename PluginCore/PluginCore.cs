@@ -58,6 +58,18 @@ namespace DrunkenBoxing {
                         Character.instance.state = State.Ready;
                         Chat("DrunkenBoxing enabled. Use \"/db off\" to disable.");
                     }
+                    else if (command.StartsWith("dump")) {
+                        Chat("Dumping settings to file.");
+                        Settings.instance.Dump(Core.CharacterFilter.Name);
+                    }
+                    else if (command.StartsWith("load")) {
+                        Chat("Loading settings from file.");
+                        
+                        if (Settings.instance.Load(Core.CharacterFilter.Name))
+                            Chat("Loading settings succeeded.");
+                        else
+                            Chat("No settings file found for this character.");
+                    }
                     else if (command.StartsWith("update")) {
                         string noun = command.Split(' ')[1];
 
@@ -124,10 +136,14 @@ namespace DrunkenBoxing {
         }
 
         private void CharacterFilter_LoginComplete(object sender, EventArgs e) {
-            Chat("It's time for DrunkenBoxing!");
-            
             try {
                 Character.instance.id = Core.CharacterFilter.Id;
+                
+                if (Settings.instance.Load(Core.CharacterFilter.Name))
+                    Chat("Loading settings succeeded.");
+                else
+                    Chat("No settings file found for this character.");
+
                 DetectMountainRetreatSpells();
                 DetectCasters();
             }

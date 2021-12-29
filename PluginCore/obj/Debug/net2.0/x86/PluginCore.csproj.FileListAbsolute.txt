@@ -9,3 +9,4 @@ D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.Ass
 D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.csproj.CoreCompileInputs.cache
 D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.dll
 D:\Documents\GitHub\DrunkenBoxing\PluginCore\obj\Debug\net2.0\x86\PluginCore.pdb
+D:\Documents\GitHub\DrunkenBoxing\PluginCore\bin\Debug\net2.0\x86\Newtonsoft.Json.dll
