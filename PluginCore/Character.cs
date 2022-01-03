@@ -24,6 +24,8 @@ namespace DrunkenBoxing {
         public List<Enemy> combatantsRingRange;
         public Spell lastSpellCast;
         public DateTime lastSpellCastShouldBeDoneAfter;
+        public Dictionary<int, DateTime> corruptedTouches;
+        private double timeInterval;
 
         private Character() {
             instance = this;
@@ -38,12 +40,34 @@ namespace DrunkenBoxing {
             combatantsRingRange = new List<Enemy>();
             lastSpellCast = null;
             lastSpellCastShouldBeDoneAfter = DateTime.MinValue;
+            corruptedTouches = new Dictionary<int, DateTime>();
+            timeInterval = 0.0;
             state = State.Ready;
         }
 
         public void Update(double deltaTime) {
             try {
                 if (state == State.Disabled) return;
+
+                timeInterval += deltaTime;
+
+                if (timeInterval >= 1000.0) {
+                    if (corruptedTouches.Count > 0) {
+                        List<int> toRemove = new List<int>();
+
+                        foreach (KeyValuePair<int, DateTime> kvp in corruptedTouches) {
+                            if (DateTime.UtcNow.CompareTo(kvp.Value) > 0)
+                                toRemove.Add(kvp.Key);
+                        }
+
+                        foreach (int trk in toRemove) {
+                            corruptedTouches.Remove(trk);
+                            Logger.LogMessage("Corrupted Touch expired on " + trk + ".");
+                        }
+                    }
+
+                    timeInterval = 0.0;
+                }
 
                 if (state == State.Casting && (DateTime.UtcNow.CompareTo(lastSpellCastShouldBeDoneAfter) > 0))
                     state = State.Ready;
@@ -52,7 +76,8 @@ namespace DrunkenBoxing {
                 if (CoreManager.Current.Actions.BusyState != 0) return;
 
                 if (state == State.Ready) {
-                    int casterId = SelectCasterByTarget(GetNextTarget()).id;
+                    Enemy nextTarget = GetNextTarget();
+                    int casterId = SelectCasterByTarget(nextTarget).id;
                     int wieldedId = GetWieldedCasterId();
 
                     if (wieldedId == -1) {
@@ -78,10 +103,14 @@ namespace DrunkenBoxing {
                             toCast = spells["Ring of Death"];
                             // Logger.LogMessage("There are " + combatantsRingRange.Count.ToString() + " enemies in ring range, so we're switching to a ring spell.");
                         }
+                        else if (Settings.instance.dots.Contains(nextTarget.name) && !corruptedTouches.ContainsKey(nextTarget.id)) {
+                            toCast = spells["Corrupted Touch"];
+                            corruptedTouches.Add(nextTarget.id, DateTime.UtcNow.AddSeconds(toCast.animationSeconds + spells["Corrupted Touch"].effectDurationSeconds));
+                        }
 
                         lastSpellCast = toCast;
                         lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(toCast.animationSeconds);
-                        CoreManager.Current.Actions.CastSpell(toCast.id, GetNextTarget().id);
+                        CoreManager.Current.Actions.CastSpell(toCast.id, nextTarget.id);
                         // Logger.LogMessage("I'm casting " + lastSpellCast.id.ToString() + ".");
                     }
                 }

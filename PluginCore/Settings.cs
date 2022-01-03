@@ -8,6 +8,7 @@ namespace DrunkenBoxing {
         public static Settings instance = new Settings();
 
         public List<string> bosses;
+        public List<string> dots;
         public Dictionary<string, Priority> priorities;
         public double fightDistance;
         public double ringDistance;
@@ -17,15 +18,9 @@ namespace DrunkenBoxing {
             fightDistance = 6.0;
             ringDistance = 4.0;
             ringMinimumCount = 3;
-
-            bosses = new List<string>() {
-                "Sir Bellas",
-                "Tremendous Monouga",
-            };
-
-            priorities = new Dictionary<string, Priority>() {
-                { "Lag Beast", Priority.Never },
-            };
+            bosses = new List<string>();
+            dots = new List<string>();
+            priorities = new Dictionary<string, Priority>();
         }
 
         public void Dump(string characterName) {
@@ -35,7 +30,7 @@ namespace DrunkenBoxing {
                 serializer.Formatting = Formatting.Indented;
                 string formattedCharacterName = characterName.Replace(' ', '_');
                 
-                using (StreamWriter sw = new StreamWriter(@"drunkenboxing_settings_" + formattedCharacterName + ".json"))
+                using (StreamWriter sw = new StreamWriter(@"drunkenboxing_settings_" + formattedCharacterName.ToLower() + ".json", false))
                 using (JsonWriter writer = new JsonTextWriter(sw))
                 {
                     serializer.Serialize(writer, this);
@@ -52,7 +47,7 @@ namespace DrunkenBoxing {
                     JsonSerializer serializer = new JsonSerializer();
                     serializer.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                     
-                    using (StreamReader sr = new StreamReader(@"drunkenboxing_settings_" + formattedCharacterName + ".json"))
+                    using (StreamReader sr = new StreamReader(@"drunkenboxing_settings_" + formattedCharacterName.ToLower() + ".json"))
                     using (JsonTextReader reader = new JsonTextReader(sr))
                     {
                         instance = serializer.Deserialize<Settings>(reader);
@@ -66,7 +61,12 @@ namespace DrunkenBoxing {
                     Logger.LogMessage("No settings file found for " + formattedCharacterName + ".");
                     return false;
                 }
-            } catch (Exception ex) { Logger.LogError("Settings.Dump", ex); return false; }
+            }
+            catch (Exception ex) {
+                Logger.LogError("Settings.Dump", ex);
+                Character.instance.state = State.Ready;
+                return false;
+            }
         }
     }
 }

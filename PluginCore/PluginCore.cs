@@ -68,7 +68,7 @@ namespace DrunkenBoxing {
                         if (Settings.instance.Load(Core.CharacterFilter.Name))
                             Chat("Loading settings succeeded.");
                         else
-                            Chat("No settings file found for this character.");
+                            Chat("No settings file found for this character, or settings file format issue (see logs).");
                     }
                     else if (command.StartsWith("update")) {
                         string noun = command.Split(' ')[1];

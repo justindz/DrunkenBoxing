@@ -13,32 +13,10 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-26T14:08:57.919Z",
-      "id": "6",
-      "references": [],
-      "title": "Add DOT support"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-28T01:12:31.915Z",
-      "id": "24",
-      "references": [],
-      "title": "Change settings via CLI",
-      "details": {
-        "content": "Ensure ring range cannot be set above combat range.",
-        "mime": "text/markdown"
-      }
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
       "creation_time": "2021-12-29T01:53:08.198Z",
       "id": "29",
       "references": [],
-      "title": "Disable VT Loot until combatants is clear, enable again when one is added?"
+      "title": "Disable VT Loot until combatants is empty, enable again when one is added?"
     },
     {
       "assignedTo": {
@@ -62,6 +40,15 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
+      "creation_time": "2021-12-29T02:52:23.655Z",
+      "id": "33",
+      "references": [],
+      "title": "Monitor combat text output to confirm spell cast instead of waiting on animation durations?"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
       "creation_time": "2021-12-28T23:53:11.086Z",
       "id": "25",
       "references": [],
@@ -74,47 +61,52 @@
       "creation_time": "2021-12-26T14:08:39.033Z",
       "id": "5",
       "references": [],
-      "title": "Select bolt spell by current skill value"
+      "title": "Setting to determine what level of spells to use for the character"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-28T01:12:31.915Z",
+      "id": "24",
+      "references": [],
+      "title": "View and Change settings via CLI",
+      "details": {
+        "content": "Ensure ring range cannot be set above combat range.",
+        "mime": "text/markdown"
+      }
     }
   ],
-  "in-progress": [],
+  "in-progress": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-29T02:41:20.292Z",
+      "id": "31",
+      "references": [],
+      "title": "Add Blessing of Unity support"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-29T02:41:34.176Z",
+      "id": "32",
+      "references": [],
+      "title": "Add Ward of Rebirth support"
+    }
+  ],
   "testing": [],
   "done": [
     {
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-29T00:37:31.904Z",
-      "id": "27",
+      "creation_time": "2021-12-26T14:08:57.919Z",
+      "id": "6",
       "references": [],
-      "title": "Can settings dump to file pretty print?"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-29T00:38:37.786Z",
-      "id": "28",
-      "references": [],
-      "title": "Can settings dump/load use enum names instead of values?"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-26T15:00:56.898Z",
-      "id": "8",
-      "references": [],
-      "title": "JSON config file"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-29T00:36:45.010Z",
-      "id": "26",
-      "references": [],
-      "title": "Load config file, if present, on startup"
+      "title": "Add Corrupted Touch support"
     }
   ]
 }
