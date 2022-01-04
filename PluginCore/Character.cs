@@ -16,15 +16,17 @@ namespace DrunkenBoxing {
     class Character {
         public static Character instance = new Character();
         public int id;
+        public string name;
         public Dictionary<string, Spell> spells;
         public List<Caster> casters;
         public Position position;
         public State state;
         public Dictionary<Priority, Queue<Enemy>> combatants;
         public List<Enemy> combatantsRingRange;
-        public Spell lastSpellCast;
-        public DateTime lastSpellCastShouldBeDoneAfter;
-        public Dictionary<int, DateTime> corruptedTouches;
+        private Spell lastSpellCast;
+        private DateTime lastSpellCastShouldBeDoneAfter;
+        private Dictionary<int, DateTime> corruptedTouches;
+        private DateTime wardOfRebirthExpires;
         private double timeInterval;
 
         private Character() {
@@ -41,8 +43,8 @@ namespace DrunkenBoxing {
             lastSpellCast = null;
             lastSpellCastShouldBeDoneAfter = DateTime.MinValue;
             corruptedTouches = new Dictionary<int, DateTime>();
+            wardOfRebirthExpires = DateTime.MinValue;
             timeInterval = 0.0;
-            state = State.Ready;
         }
 
         public void Update(double deltaTime) {
@@ -72,7 +74,6 @@ namespace DrunkenBoxing {
                 if (state == State.Casting && (DateTime.UtcNow.CompareTo(lastSpellCastShouldBeDoneAfter) > 0))
                     state = State.Ready;
                 
-                if (!ThereAreMoreTargets()) return;
                 if (CoreManager.Current.Actions.BusyState != 0) return;
 
                 if (state == State.Ready) {
@@ -80,38 +81,30 @@ namespace DrunkenBoxing {
                     int casterId = SelectCasterByTarget(nextTarget).id;
                     int wieldedId = GetWieldedCasterId();
 
-                    if (wieldedId == -1) {
+                    if (nextTarget != null && wieldedId == -1) {
                         CoreManager.Current.Actions.AutoWield(casterId);
                         state = State.WieldingCaster;
                         // Logger.LogMessage("I need to equip the caster for this target.");
                     }
-                    else if (wieldedId != -1 && wieldedId != casterId) {
+                    else if (nextTarget != null && wieldedId != -1 && wieldedId != casterId) {
                         CoreManager.Current.Actions.MoveItem(wieldedId, id, 0, false);
                         state = State.Unwielding;
                         // Logger.LogMessage("I need to unequip the current caster for this target.");
                     }
-                    else if (CoreManager.Current.Actions.CombatMode != CombatState.Magic) {
+                    else if (WeHaveSomethingToCast() && CoreManager.Current.Actions.CombatMode != CombatState.Magic) {
                         state = State.SwitchingToMagicMode;
                         Decal.Adapter.CoreManager.Current.Actions.SetCombatMode(CombatState.Magic);
                         // Logger.LogMessage("I need to get into magic combat mode.");
                     }
                     else {
-                        state = State.Casting;
-                        Spell toCast = spells["Incantation of Bloodstone Bolt"];
-
-                        if (combatantsRingRange.Count >= Settings.instance.ringMinimumCount) {
-                            toCast = spells["Ring of Death"];
-                            // Logger.LogMessage("There are " + combatantsRingRange.Count.ToString() + " enemies in ring range, so we're switching to a ring spell.");
-                        }
-                        else if (Settings.instance.dots.Contains(nextTarget.name) && !corruptedTouches.ContainsKey(nextTarget.id)) {
-                            toCast = spells["Corrupted Touch"];
-                            corruptedTouches.Add(nextTarget.id, DateTime.UtcNow.AddSeconds(toCast.animationSeconds + spells["Corrupted Touch"].effectDurationSeconds));
-                        }
-
-                        lastSpellCast = toCast;
-                        lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(toCast.animationSeconds);
-                        CoreManager.Current.Actions.CastSpell(toCast.id, nextTarget.id);
-                        // Logger.LogMessage("I'm casting " + lastSpellCast.id.ToString() + ".");
+                        if (TimeToCastWardOfRebirth())
+                            CastWardOfRebirth();
+                        else if (spells["Ring of Death"].has && combatantsRingRange.Count >= Settings.instance.ringMinimumCount)
+                            CastRingOfDeath(nextTarget);
+                        else if (nextTarget != null && spells["Corrupted Touch"].has && Settings.instance.dots.Contains(nextTarget.name) && !corruptedTouches.ContainsKey(nextTarget.id))
+                            CastCorruptedTouch(nextTarget);
+                        else if (nextTarget != null)
+                            CastBolt(nextTarget);
                     }
                 }
                 else if (state == State.WieldingCaster) {
@@ -159,14 +152,17 @@ namespace DrunkenBoxing {
             return null;
         }
 
-        public bool ThereAreMoreTargets() {
-            if (combatants[Priority.Rage].Count > 0)
+        public bool WeHaveSomethingToCast() {
+            if (GetNextTarget() != null)
                 return true;
-            else if (combatants[Priority.Focus].Count > 0)
+            else if (TimeToCastWardOfRebirth())
                 return true;
-            else if (combatants[Priority.Normal].Count > 0)
-                return true;
-            else if (combatants[Priority.Last].Count > 0)
+
+            return false;
+        }
+
+        public bool TimeToCastWardOfRebirth() {
+            if (spells["Ward of Rebirth"].has && Fellowship.instance.inFellowship && Fellowship.instance.members.Count > 1 && (Fellowship.instance.membershipHasChanged || DateTime.UtcNow.CompareTo(wardOfRebirthExpires) > 0))
                 return true;
 
             return false;
@@ -186,6 +182,9 @@ namespace DrunkenBoxing {
         }
 
         public Caster SelectCasterByTarget(Enemy e) {
+            if (e == null)
+                return casters[0];
+
             List<Caster> slayers = casters.FindAll(x => x.slayer == e.race);
 
             if (slayers.Count > 0) {
@@ -201,18 +200,10 @@ namespace DrunkenBoxing {
             else {
                 Caster best = casters[0];
 
-                if (e.boss) {
-                    foreach (Caster c in casters) {
-                        if (c.critMulti > best.critMulti)
-                            best = c;
-                    }
-                }
-                else {
-                    foreach (Caster c in casters) {
-                        if (c.critChance > best.critChance)
-                            best = c;
-                    }
-                }
+                if (e.boss)
+                    best = casters.Find(x => x.cb == true);
+                else
+                    best = casters.Find(x => x.cs == true);
 
                 return best;
             }
@@ -260,5 +251,44 @@ namespace DrunkenBoxing {
 
             combatantsRingRange.Remove(enemy);
         }
+
+        private void SetCastTrackingStates(Spell s) {
+            state = State.Casting;
+            lastSpellCast = s;
+            lastSpellCastShouldBeDoneAfter = DateTime.UtcNow.AddSeconds(s.animationSeconds);
+        }
+
+        #region Actions
+        private void CastBolt(Enemy target) {
+            Spell toCast = spells["Incantation of Bloodstone Bolt"]; // TODO select bolt by skill level
+            SetCastTrackingStates(toCast);
+            CoreManager.Current.Actions.CastSpell(toCast.id, target.id);
+            // Logger.LogMessage("I'm casting a Bolt.");
+        }
+
+        private void CastRingOfDeath(Enemy target) {
+            Spell toCast = spells["Ring of Death"];
+            SetCastTrackingStates(toCast);
+            CoreManager.Current.Actions.CastSpell(toCast.id, target.id);
+            // Logger.LogMessage("There are " + combatantsRingRange.Count.ToString() + " enemies in ring range, so we're using a ring spell.");
+        }
+
+        private void CastCorruptedTouch(Enemy target) {
+            Spell toCast = spells["Corrupted Touch"];
+            SetCastTrackingStates(toCast);
+            corruptedTouches.Add(target.id, DateTime.UtcNow.AddSeconds(toCast.animationSeconds + toCast.effectDurationSeconds));
+            CoreManager.Current.Actions.CastSpell(toCast.id, target.id);
+            // Logger.LogMessage("I'm casting Corrupted Touch.");
+        }
+
+        private void CastWardOfRebirth() {
+            Spell toCast = spells["Ward of Rebirth"];
+            SetCastTrackingStates(toCast);
+            wardOfRebirthExpires = DateTime.UtcNow.AddSeconds(toCast.animationSeconds + toCast.effectDurationSeconds);
+            CoreManager.Current.Actions.CastSpell(toCast.id, Fellowship.instance.members.Find(x => x != id));
+            Fellowship.instance.membershipHasChanged = false;
+            // Logger.LogMessage("I'm casting Ward of Rebirth.");
+        }
+        #endregion
     }
 }

@@ -40,24 +40,6 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-29T02:52:23.655Z",
-      "id": "33",
-      "references": [],
-      "title": "Monitor combat text output to confirm spell cast instead of waiting on animation durations?"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2021-12-28T23:53:11.086Z",
-      "id": "25",
-      "references": [],
-      "title": "README.md"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
       "creation_time": "2021-12-26T14:08:39.033Z",
       "id": "5",
       "references": [],
@@ -82,10 +64,42 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-29T02:41:20.292Z",
-      "id": "31",
+      "creation_time": "2022-01-04T02:18:38.111Z",
+      "id": "37",
       "references": [],
-      "title": "Add Blessing of Unity support"
+      "title": "Detect \"Your spell fizzled.\" blue text and retry any spells if needed"
+    }
+  ],
+  "testing": [],
+  "done": [
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2022-01-04T02:12:28.053Z",
+      "id": "35",
+      "references": [],
+      "title": "CS and CB detection not working - switch to checking icon underlay",
+      "type": "bug"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2022-01-04T02:14:55.062Z",
+      "id": "36",
+      "references": [],
+      "title": "Null reference exception in Character.Update",
+      "type": "bug"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2021-12-26T14:08:57.919Z",
+      "id": "6",
+      "references": [],
+      "title": "Add Corrupted Touch support"
     },
     {
       "assignedTo": {
@@ -95,18 +109,15 @@
       "id": "32",
       "references": [],
       "title": "Add Ward of Rebirth support"
-    }
-  ],
-  "testing": [],
-  "done": [
+    },
     {
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-26T14:08:57.919Z",
-      "id": "6",
+      "creation_time": "2022-01-03T14:52:43.767Z",
+      "id": "34",
       "references": [],
-      "title": "Add Corrupted Touch support"
+      "title": "Refactor all spells to their own \"cast\" methods"
     }
   ]
 }

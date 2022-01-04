@@ -32,8 +32,7 @@ namespace DrunkenBoxing {
             spells.Add("Incantation of Bloodstone Bolt", new Spell(5532, 8, "Slavu Zhapaj", false, 1.7));
             spells.Add("Ring of Death", new Spell(4239, 6, "Tugak Zha", false, 3.5));
             spells.Add("Corrupted Touch", new Spell(5980, 8, "Helkas Quasith", false, 1.7, 30.0));
-            // spells.Add("Ward of Rebirth", new Spell(3071, false, 3600.0));
-            // spells.Add("Blessing of Unity", new Spell(5314, false, 50.0));
+            spells.Add("Ward of Rebirth", new Spell(3071, 7, "Boquar Zhapaj", false, 1.6, 3600.0));
             #endregion
 
             #region Unused
@@ -41,6 +40,7 @@ namespace DrunkenBoxing {
             // spells.Add("Burning Curse", new Spell(4716, 7, "Equin Zhapaj", false, 1.6));
             // spells.Add("Exsanguinating Wave", new Spell(3940, 8, "Tugak Zhapaj", false, 1.6));
             // spells.Add("Fellowship Heal I", new Spell(2981, 1, false));
+            // spells.Add("Blessing of Unity", new Spell(5314, false, 50.0));
             #endregion
 
             return spells;

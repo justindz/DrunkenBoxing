@@ -17,6 +17,7 @@ namespace DrunkenBoxing {
             Core.CharacterFilter.LoginComplete += CharacterFilter_LoginComplete;
             Core.WorldFilter.CreateObject += World.instance.WorldFilter_CreateObject;
             Core.EchoFilter.ServerDispatch += World.instance.EchoFilter_ServerDispatch;
+            Core.EchoFilter.ServerDispatch += Fellowship.instance.EchoFilter_ServerDispatch;
             Core.WorldFilter.ReleaseObject += World.instance.WorldFilter_ReleaseOject;
             Core.CommandLineText += Core_CommandLineText;
             Core.ChatBoxMessage += Character.instance.Core_ChatBoxMessage;
@@ -28,6 +29,7 @@ namespace DrunkenBoxing {
             Core.CharacterFilter.LoginComplete -= CharacterFilter_LoginComplete;
             Core.WorldFilter.CreateObject -= World.instance.WorldFilter_CreateObject;
             Core.EchoFilter.ServerDispatch -= World.instance.EchoFilter_ServerDispatch;
+            Core.EchoFilter.ServerDispatch -= Fellowship.instance.EchoFilter_ServerDispatch;
             Core.WorldFilter.ReleaseObject -= World.instance.WorldFilter_ReleaseOject;
             Core.CommandLineText -= Core_CommandLineText;
             Core.ChatBoxMessage -= Character.instance.Core_ChatBoxMessage;
@@ -138,6 +140,7 @@ namespace DrunkenBoxing {
         private void CharacterFilter_LoginComplete(object sender, EventArgs e) {
             try {
                 Character.instance.id = Core.CharacterFilter.Id;
+                Character.instance.name = Core.CharacterFilter.Name;
                 
                 if (Settings.instance.Load(Core.CharacterFilter.Name))
                     Chat("Loading settings succeeded.");
@@ -146,6 +149,7 @@ namespace DrunkenBoxing {
 
                 DetectMountainRetreatSpells();
                 DetectCasters();
+                Character.instance.state = State.Ready;
             }
             catch (Exception ex) { Logger.LogError("PluginCore.CharacterFilter_LoginComplete", ex); }
         }
@@ -171,7 +175,7 @@ namespace DrunkenBoxing {
                     if (!item.LongKeys.Contains(159) || item.LongKeys[159] == 33) {
                         Caster c = Caster.BuildFromWorldObject(item);
                         Character.instance.casters.Add(c);
-                        Chat("Added life caster: " + c.ToString() + " at currented wielded location " + item.LongKeys[10].ToString());
+                        Chat("Added life caster: " + c.ToString() + ".");
                     }
                     else
                         Chat("Skipped caster: " + item.Name);

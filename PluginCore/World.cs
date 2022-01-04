@@ -28,7 +28,6 @@ namespace DrunkenBoxing {
 
         private World() {
             enemies = new Dictionary<int, Enemy>();
-            Logger.LogMessage("World tracker created.");
         }
 
         public void WorldFilter_CreateObject(object sender, CreateObjectEventArgs e) {
@@ -53,7 +52,7 @@ namespace DrunkenBoxing {
 
         public void EchoFilter_ServerDispatch(object sender, NetworkMessageEventArgs e) {
             try {
-                if (e.Message.Type == 0xF748) {
+                if (e.Message.Type == 0xF748) { // Set Position and Motion
                     int id = e.Message.Value<int>("object");
                     Position pos = PositionStructToPosition(e.Message.Struct("position"));
 
