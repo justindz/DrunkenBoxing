@@ -16,7 +16,7 @@
       "creation_time": "2022-01-04T02:18:38.111Z",
       "id": "37",
       "references": [],
-      "title": "Detect \"Your spell fizzled.\" blue text and retry any spells if needed"
+      "title": "Detect \"Your spell fizzled\" and resist blue text and retry any spells if needed"
     },
     {
       "assignedTo": {
@@ -43,7 +43,7 @@
       "creation_time": "2021-12-27T23:28:20.645Z",
       "id": "21",
       "references": [],
-      "title": "Help command"
+      "title": "Help command - create a Command class and auto-gen help from that?"
     },
     {
       "assignedTo": {
@@ -92,37 +92,5 @@
   ],
   "in-progress": [],
   "testing": [],
-  "done": [
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2022-01-04T13:34:27.543Z",
-      "id": "38",
-      "references": [],
-      "title": "Caster selection bug"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2022-01-04T16:53:18.302Z",
-      "id": "42",
-      "references": [],
-      "title": "GetWieldedCasterId happens every State.Ready Update loop -- make this more efficient!"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2022-01-04T17:48:29.912Z",
-      "description": {
-        "content": "Need command to register each type\nNeed to change equip method to use\nNeed to ensure /db is not enabled until at least a pve wand is registered\nUPDATE README.md",
-        "mime": "text/markdown"
-      },
-      "id": "43",
-      "references": [],
-      "title": "Support for wands: pve (CS), boss (CB), slayers by Race"
-    }
-  ]
+  "done": []
 }

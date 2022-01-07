@@ -52,16 +52,42 @@ A valid config file looks like this:
     "Sir Bellas",
     "Tremendous Monouga",
   ],
+  "dots": [
+    "Pyreal Target Drudge",
+  ],
   "priorities": {
     "Lag Beast": "Never",
-    "Stomper": "Normal"
+    "Stomper": "Normal",
   },
-  "dots": [
-    "Oak Target Drudge",
-  ],
   "fightDistance": 6.0,
   "ringDistance": 4.0,
-  "ringMinimumCount": 3
+  "ringMinimumCount": 3,
+  "pveCaster": -2146505185,
+  "bossCaster": -2147483648,
+  "slayerCasters": {
+    "Olthoi": -2147483648,
+    "Banderling": -2147483648,
+    "Drudge": -2147483648,
+    "Lugian": -2147483648,
+    "Tumerok": -2147483648,
+    "Golem": -2147483648,
+    "Undead": -2147483648,
+    "Tusker": -2147483648,
+    "Virindi": -2147483648,
+    "Wisp": -2147483648,
+    "Shadow": -2147483648,
+    "Zefir": -2147483648,
+    "Skeleton": -2147483648,
+    "Human": -2147483648,
+    "Niffis": -2147483648,
+    "Elemental": -2147483648,
+    "Burun": -2147483648,
+    "Ghost": -2147483648,
+    "Viamontian": -2147483648,
+    "Mukkir": -2147483648,
+    "Anekshay": -2147483648,
+    "None": -2147483648
+  }
 }
 ```
 
@@ -83,6 +109,15 @@ These are the configurable numerical values:
 * fightDistance - the maximum distance a player can be from an enemy for that enemy to be considered "fightable"
 * ringDistance - the maximum distance a player can be from an enemy for the enemy to be counted towards the minimum needed to use rings, which must be a lower value than fightDistance
 * ringMinimumCount - the minimum number of enemies in ringDistance needed to prioritize casting a ring spell
+
+These are the configurable item IDs:
+* pveCaster - the caster to use against general enemies (e.g. CS)
+* bossCaster - the caster to use against anything flagged as a boss (e.g. CB)
+* slayerCasters - the caster to use against an enemy with the selected race
+
+The priority for caster auto-selection is: slayer -> boss -> pve
+
+Note that you can set the caster in-game using a command and them dump the config file. You should not have to manually configure this section. Also, if a race is not listed, it's because it does not currently have a slayer. Create an issue if I missed any custom slayers that weren't in retail, and I'll add support for that race.
 
 ## Installation
 
