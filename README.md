@@ -7,7 +7,8 @@ The Drunkenfell ACE server for Asheron's Call includes a quest that rewards a se
 ## Major Features
 
 * Detects and, if known, uses Incantation of Bloodstone Bolt, Ring of Death, Corrupted Touch, and Ward of Rebirth (requires fellowship of 2+ members)
-* Auto-wields no-wield or life casters based on primary target, switching to magic combat mode as required
+* Auto-wields casters based on primary target, switching to magic combat mode as required
+* Can configure a preferred wand for PVE (e.g. CS), bosses (e.g. CB), and an optional wand preference per enemy race (e.g. Slayers)
 * Can prioritize targets at four different levels: Rage, Focus, Normal, Last, and Never
 * Can set monsters as bosses to prioritize CB > CS
 * Can set mosnters to be targeted with Corrupted Touch
@@ -19,9 +20,8 @@ The Drunkenfell ACE server for Asheron's Call includes a quest that rewards a se
 * Does not use Summoning
 * Does not debuff enemies
 * Does not cast Harm Self (you will have to die via the normal methods)
-* Caster auto-selection is a little basic (prioritizes slayer multiplier, then CB on bosses and CS on everything else)
 
-There are also a number of quirks relative to VT that are being tightened up and aren't included on the "major" list. For example, spell cast timings are not as tight as VT, and sometimes VT looting will partially trigger between casts.
+There are also a number of quirks relative to VT that are being tightened up and aren't included on the "major" list. For example, spell cast timings are not as tight as VT, and sometimes VT looting will partially trigger between casts, or heals will be slightly delayed due to cast timings between the two plugins.
 
 ## Usage
 
@@ -31,9 +31,8 @@ Most of the plugin's work occurs automatically when enabled, based on your spell
 * /db off - disable the plugin
 * /db dump - write the current settings for the character to a JSON file (useful to then modify and load with the next command)
 * /db load - reload settings from the character-specific JSON config file, if found (note: will read from the same folder dump writes to, which may be the AC client folder)
-* /db update spells - use this command to start using new spells you have learned since logging in (or last update)
-* /db update casters - use this command to refresh the plugin's knowledge of your no-wield or life-req casters
-* /db test caster - select an enemy and use this command to test which caster the plugin would select for it
+* /db update spells - use this command to start using new Mountain Retreat Life Magic spells you have learned since logging in (or last update)
+* /db set caster TYPE - set the selected caster to be the preferred caster for TYPE=pve, TYPE=boss, or TYPE=race where race is a string with or without initcaps (e.g. "Tumerok" or "shadow")
 * /db test distance - select an enemy and use this command to test the distance from your character
 * /db test enemies - list the enemies currently known to the plugin
 * /db test combatants - list the enemies the plugin believes are in combat range

@@ -34,6 +34,7 @@ namespace DrunkenBoxing {
             try {
                 if (e.New.ObjectClass == ObjectClass.Monster) {
                     if (enemies.ContainsKey(e.New.Id)) return;
+                    if (e.New.Name.Contains(Character.instance.name + "'s")) return;
 
                     Enemy enemy = new Enemy(e.New);
                     enemy.position = new Position(0, (float)e.New.Offset().X, (float)e.New.Offset().Y, (float)e.New.Offset().Z);

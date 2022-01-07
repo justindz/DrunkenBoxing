@@ -13,6 +13,9 @@ namespace DrunkenBoxing {
         public double fightDistance;
         public double ringDistance;
         public int ringMinimumCount;
+        public int pveCaster;
+        public int bossCaster;
+        public Dictionary<Race, int> slayerCasters;
 
         private Settings() {
             fightDistance = 6.0;
@@ -21,6 +24,12 @@ namespace DrunkenBoxing {
             bosses = new List<string>();
             dots = new List<string>();
             priorities = new Dictionary<string, Priority>();
+            pveCaster = bossCaster = int.MinValue;
+            slayerCasters = new Dictionary<Race, int>(Enum.GetNames(typeof(Race)).Length);
+
+            foreach (Race r in Enum.GetValues(typeof(Race))) {
+                slayerCasters[r] = int.MinValue;
+            }
         }
 
         public void Dump(string characterName) {
@@ -30,7 +39,7 @@ namespace DrunkenBoxing {
                 serializer.Formatting = Formatting.Indented;
                 string formattedCharacterName = characterName.Replace(' ', '_');
                 
-                using (StreamWriter sw = new StreamWriter(@"drunkenboxing_settings_" + formattedCharacterName.ToLower() + ".json", false))
+                using (StreamWriter sw = new StreamWriter(@"drunkenboxing_settings_" + formattedCharacterName + ".json", false))
                 using (JsonWriter writer = new JsonTextWriter(sw))
                 {
                     serializer.Serialize(writer, this);
@@ -47,7 +56,7 @@ namespace DrunkenBoxing {
                     JsonSerializer serializer = new JsonSerializer();
                     serializer.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                     
-                    using (StreamReader sr = new StreamReader(@"drunkenboxing_settings_" + formattedCharacterName.ToLower() + ".json"))
+                    using (StreamReader sr = new StreamReader(@"drunkenboxing_settings_" + formattedCharacterName + ".json"))
                     using (JsonTextReader reader = new JsonTextReader(sr))
                     {
                         instance = serializer.Deserialize<Settings>(reader);

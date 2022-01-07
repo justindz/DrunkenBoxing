@@ -13,6 +13,15 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
+      "creation_time": "2022-01-04T02:18:38.111Z",
+      "id": "37",
+      "references": [],
+      "title": "Detect \"Your spell fizzled.\" blue text and retry any spells if needed"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
       "creation_time": "2021-12-29T01:53:08.198Z",
       "id": "29",
       "references": [],
@@ -40,10 +49,32 @@
       "assignedTo": {
         "name": "Justin D-Z"
       },
+      "creation_time": "2022-01-04T16:44:51.566Z",
+      "id": "41",
+      "references": [],
+      "title": "Require Corrupted Touch chat text confirmation or reset its timer so it attempts to cast again (also reset when it is followed by \"resists your spell\")"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
       "creation_time": "2021-12-26T14:08:39.033Z",
       "id": "5",
       "references": [],
       "title": "Setting to determine what level of spells to use for the character"
+    },
+    {
+      "assignedTo": {
+        "name": "Justin D-Z"
+      },
+      "creation_time": "2022-01-04T16:20:18.017Z",
+      "details": {
+        "content": "Also, combat targeting needs to exclude pets -- spells seem to want to target them.",
+        "mime": "text/markdown"
+      },
+      "id": "39",
+      "references": [],
+      "title": "Use Pets"
     },
     {
       "assignedTo": {
@@ -59,65 +90,39 @@
       }
     }
   ],
-  "in-progress": [
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2022-01-04T02:18:38.111Z",
-      "id": "37",
-      "references": [],
-      "title": "Detect \"Your spell fizzled.\" blue text and retry any spells if needed"
-    }
-  ],
+  "in-progress": [],
   "testing": [],
   "done": [
     {
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2022-01-04T02:12:28.053Z",
-      "id": "35",
+      "creation_time": "2022-01-04T13:34:27.543Z",
+      "id": "38",
       "references": [],
-      "title": "CS and CB detection not working - switch to checking icon underlay",
-      "type": "bug"
+      "title": "Caster selection bug"
     },
     {
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2022-01-04T02:14:55.062Z",
-      "id": "36",
+      "creation_time": "2022-01-04T16:53:18.302Z",
+      "id": "42",
       "references": [],
-      "title": "Null reference exception in Character.Update",
-      "type": "bug"
+      "title": "GetWieldedCasterId happens every State.Ready Update loop -- make this more efficient!"
     },
     {
       "assignedTo": {
         "name": "Justin D-Z"
       },
-      "creation_time": "2021-12-26T14:08:57.919Z",
-      "id": "6",
-      "references": [],
-      "title": "Add Corrupted Touch support"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
+      "creation_time": "2022-01-04T17:48:29.912Z",
+      "description": {
+        "content": "Need command to register each type\nNeed to change equip method to use\nNeed to ensure /db is not enabled until at least a pve wand is registered\nUPDATE README.md",
+        "mime": "text/markdown"
       },
-      "creation_time": "2021-12-29T02:41:34.176Z",
-      "id": "32",
+      "id": "43",
       "references": [],
-      "title": "Add Ward of Rebirth support"
-    },
-    {
-      "assignedTo": {
-        "name": "Justin D-Z"
-      },
-      "creation_time": "2022-01-03T14:52:43.767Z",
-      "id": "34",
-      "references": [],
-      "title": "Refactor all spells to their own \"cast\" methods"
+      "title": "Support for wands: pve (CS), boss (CB), slayers by Race"
     }
   ]
 }

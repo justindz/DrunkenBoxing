@@ -67,8 +67,16 @@ namespace DrunkenBoxing {
                     else if (command.StartsWith("load")) {
                         Chat("Loading settings from file.");
                         
-                        if (Settings.instance.Load(Core.CharacterFilter.Name))
+                        if (Settings.instance.Load(Core.CharacterFilter.Name)) {
                             Chat("Loading settings succeeded.");
+
+                            if (Settings.instance.pveCaster != int.MinValue)
+                                Character.instance.state = State.Ready;
+                            else {
+                                Character.instance.state = State.Disabled;
+                                Chat("DrunkenBoxing disabled. You need to '/db set caster pve' and then '/db on' to enable.");
+                            }
+                        }
                         else
                             Chat("No settings file found for this character, or settings file format issue (see logs).");
                     }
@@ -77,23 +85,55 @@ namespace DrunkenBoxing {
 
                         if (noun.StartsWith("spells"))
                             DetectMountainRetreatSpells();
-                        else if (noun.StartsWith("casters"))
-                            DetectCasters();
+                    }
+                    else if (command.StartsWith("set")) {
+                        string noun = command.Split(' ')[1];
+
+                        if (noun == "caster") {
+                            string subject = command.Split(' ')[2];
+
+                            if (subject == "pve") {
+                                WorldObject sel = Core.WorldFilter[Host.Actions.CurrentSelection];
+
+                                if (Caster.IsCaster(sel)) {
+                                    Settings.instance.pveCaster = sel.Id;
+                                    Chat(sel.Name + " set as PVE caster.");
+                                }
+                                else
+                                    Chat("'" + sel.Name + "' is not a valid caster.");
+                            }
+                            else if (subject == "boss") {
+                                WorldObject sel = Core.WorldFilter[Host.Actions.CurrentSelection];
+
+                                if (Caster.IsCaster(sel)) {
+                                    Settings.instance.bossCaster = sel.Id;
+                                    Chat(sel.Name + " set as boss caster.");
+                                }
+                                else
+                                    Chat("'" + sel.Name + "' is not a valid caster.");
+                            }
+                            else {
+                                try {
+                                    Race race = (Race)Enum.Parse(typeof(Race), noun, true);
+                                    WorldObject sel = Core.WorldFilter[Host.Actions.CurrentSelection];
+
+                                    if (Caster.IsCaster(sel)) {
+                                        Settings.instance.slayerCasters[race] = sel.Id;
+                                        Chat(sel.Name + " set as caster for " + race.ToString() + ".");
+                                    }
+                                    else
+                                        Chat("'" + sel.Name + "' is not a valid caster.");
+                                }
+                                catch (ArgumentNullException) {
+                                    Chat("'" + subject + "' is not a valid race.");
+                                }
+                            }
+                        }
                     }
                     else if (command.StartsWith("test")) {
                         string noun = command.Split(' ')[1];
 
-                        if (noun.StartsWith("caster")) {
-                            WorldObject sel = Core.WorldFilter[Host.Actions.CurrentSelection];
-                            
-                            if (sel == null || sel.ObjectClass != ObjectClass.Monster) {
-                                Chat("Select a monster to test caster selection.");
-                                return;
-                            }
-
-                            Chat("I would use " + Character.instance.SelectCasterByTarget(World.instance.enemies[sel.Id]).name + " on that target.");
-                        }
-                        else if (noun.StartsWith("distance")) {
+                        if (noun.StartsWith("distance")) {
                             WorldObject sel = Core.WorldFilter[Host.Actions.CurrentSelection];
 
                             if (sel == null || sel.ObjectClass != ObjectClass.Monster) {
@@ -148,8 +188,11 @@ namespace DrunkenBoxing {
                     Chat("No settings file found for this character.");
 
                 DetectMountainRetreatSpells();
-                DetectCasters();
-                Character.instance.state = State.Ready;
+                
+                if (Settings.instance.pveCaster != int.MinValue)
+                    Character.instance.state = State.Ready;
+                else
+                    Chat("DrunkenBoxing disabled. You need to '/db set caster pve' and then '/db on' to enable.");
             }
             catch (Exception ex) { Logger.LogError("PluginCore.CharacterFilter_LoginComplete", ex); }
         }
@@ -161,24 +204,6 @@ namespace DrunkenBoxing {
                 if (Core.CharacterFilter.IsSpellKnown(entry.Value.id)) {
                     Character.instance.spells[entry.Key].has = true;
                     Chat("Enabled: " + entry.Key);
-                }
-            }
-        }
-
-        private void DetectCasters() {
-            Logger.LogMessage("Updating Life magic casters...");
-            WorldObjectCollection inv = Core.WorldFilter.GetInventory();
-            Character.instance.casters = new List<Caster>();
-
-            foreach (WorldObject item in inv) {
-                if (item.ObjectClass == ObjectClass.WandStaffOrb) {
-                    if (!item.LongKeys.Contains(159) || item.LongKeys[159] == 33) {
-                        Caster c = Caster.BuildFromWorldObject(item);
-                        Character.instance.casters.Add(c);
-                        Chat("Added life caster: " + c.ToString() + ".");
-                    }
-                    else
-                        Chat("Skipped caster: " + item.Name);
                 }
             }
         }

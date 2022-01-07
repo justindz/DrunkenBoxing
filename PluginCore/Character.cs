@@ -18,7 +18,6 @@ namespace DrunkenBoxing {
         public int id;
         public string name;
         public Dictionary<string, Spell> spells;
-        public List<Caster> casters;
         public Position position;
         public State state;
         public Dictionary<Priority, Queue<Enemy>> combatants;
@@ -28,6 +27,8 @@ namespace DrunkenBoxing {
         private Dictionary<int, DateTime> corruptedTouches;
         private DateTime wardOfRebirthExpires;
         private double timeInterval;
+        private int lastWieldedCasterId;
+        private bool updateLastWieldedCasterId;
 
         private Character() {
             instance = this;
@@ -45,6 +46,8 @@ namespace DrunkenBoxing {
             corruptedTouches = new Dictionary<int, DateTime>();
             wardOfRebirthExpires = DateTime.MinValue;
             timeInterval = 0.0;
+            lastWieldedCasterId = 0;
+            updateLastWieldedCasterId = true;
         }
 
         public void Update(double deltaTime) {
@@ -64,7 +67,7 @@ namespace DrunkenBoxing {
 
                         foreach (int trk in toRemove) {
                             corruptedTouches.Remove(trk);
-                            Logger.LogMessage("Corrupted Touch expired on " + trk + ".");
+                            // Logger.LogMessage("Corrupted Touch expired on " + trk + ".");
                         }
                     }
 
@@ -78,17 +81,18 @@ namespace DrunkenBoxing {
 
                 if (state == State.Ready) {
                     Enemy nextTarget = GetNextTarget();
-                    int casterId = SelectCasterByTarget(nextTarget).id;
                     int wieldedId = GetWieldedCasterId();
 
                     if (nextTarget != null && wieldedId == -1) {
-                        CoreManager.Current.Actions.AutoWield(casterId);
+                        CoreManager.Current.Actions.AutoWield(SelectCasterIdByTarget(nextTarget));
                         state = State.WieldingCaster;
+                        updateLastWieldedCasterId = true;
                         // Logger.LogMessage("I need to equip the caster for this target.");
                     }
-                    else if (nextTarget != null && wieldedId != -1 && wieldedId != casterId) {
+                    else if (nextTarget != null && wieldedId != -1 && wieldedId != SelectCasterIdByTarget(nextTarget)) {
                         CoreManager.Current.Actions.MoveItem(wieldedId, id, 0, false);
                         state = State.Unwielding;
+                        updateLastWieldedCasterId = true;
                         // Logger.LogMessage("I need to unequip the current caster for this target.");
                     }
                     else if (WeHaveSomethingToCast() && CoreManager.Current.Actions.CombatMode != CombatState.Magic) {
@@ -99,25 +103,27 @@ namespace DrunkenBoxing {
                     else {
                         if (TimeToCastWardOfRebirth())
                             CastWardOfRebirth();
-                        else if (spells["Ring of Death"].has && combatantsRingRange.Count >= Settings.instance.ringMinimumCount)
+                        else if (spells["Ring of Death"].has && combatantsRingRange.Count >= Settings.instance.ringMinimumCount) // TODO pull out method
                             CastRingOfDeath(nextTarget);
-                        else if (nextTarget != null && spells["Corrupted Touch"].has && Settings.instance.dots.Contains(nextTarget.name) && !corruptedTouches.ContainsKey(nextTarget.id))
+                        else if (nextTarget != null && spells["Corrupted Touch"].has && Settings.instance.dots.Contains(nextTarget.name) && !corruptedTouches.ContainsKey(nextTarget.id)) // TODO pull out method
                             CastCorruptedTouch(nextTarget);
                         else if (nextTarget != null)
                             CastBolt(nextTarget);
                     }
                 }
                 else if (state == State.WieldingCaster) {
-                    int casterId = SelectCasterByTarget(GetNextTarget()).id;
+                    int casterId = SelectCasterIdByTarget(GetNextTarget());
 
                     if (GetWieldedCasterId() == casterId) {
                         state = State.Ready;
+                        updateLastWieldedCasterId = false;
                         // Logger.LogMessage("I've equipped the right caster for the target and I'm ready to cast.");
                     }
                 }
                 else if (state == State.Unwielding) {
                     if (GetWieldedCasterId() == -1) {
                         state = State.Ready;
+                        updateLastWieldedCasterId = true;
                         // Logger.LogMessage("I've unequipped an incorrect caster for the target and I'm ready to equip the right one.");
                     }
                 }
@@ -177,50 +183,43 @@ namespace DrunkenBoxing {
                 return true;
             else if (combatants[Priority.Last].Contains(e))
                 return true;
+            else if (combatants[Priority.Never].Contains(e))
+                return true;
 
             return false;
         }
 
-        public Caster SelectCasterByTarget(Enemy e) {
+        public int SelectCasterIdByTarget(Enemy e) {
             if (e == null)
-                return casters[0];
+                return Settings.instance.pveCaster;
 
-            List<Caster> slayers = casters.FindAll(x => x.slayer == e.race);
+            if (Settings.instance.slayerCasters[e.race] != int.MinValue)
+                return Settings.instance.slayerCasters[e.race];
+            
+            if (e.boss && Settings.instance.bossCaster != int.MinValue)
+                return Settings.instance.bossCaster;
 
-            if (slayers.Count > 0) {
-                Caster best = slayers[0];
-
-                foreach (Caster c in slayers) {
-                    if (c.slayerMulti > best.slayerMulti)
-                        best = c;
-                }
-
-                return best;
-            }
-            else {
-                Caster best = casters[0];
-
-                if (e.boss)
-                    best = casters.Find(x => x.cb == true);
-                else
-                    best = casters.Find(x => x.cs == true);
-
-                return best;
-            }
+            return Settings.instance.pveCaster;
         }
 
         public int GetWieldedCasterId() {
-            WorldObjectCollection inv = CoreManager.Current.WorldFilter.GetInventory();
+            if (updateLastWieldedCasterId) {
+                WorldObjectCollection inv = CoreManager.Current.WorldFilter.GetInventory();
 
-            foreach (WorldObject item in inv) {
-                if (item.ObjectClass == ObjectClass.WandStaffOrb) {
-                    if (item.Values(LongValueKey.Wielder) == id) {
-                        return item.Id;
+                foreach (WorldObject item in inv) {
+                    if (item.ObjectClass == ObjectClass.WandStaffOrb) {
+                        if (item.Values(LongValueKey.Wielder) == id) {
+                            lastWieldedCasterId = item.Id;
+                            return lastWieldedCasterId;
+                        }
                     }
                 }
-            }
 
-            return -1;
+                lastWieldedCasterId = -1;
+                return lastWieldedCasterId;
+            }
+            else
+                return lastWieldedCasterId;
         }
 
         public void UpdateCombatant(Enemy enemy) {
